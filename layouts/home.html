@@ -1,0 +1,723 @@
+{{ define "body" }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
+
+<style>
+  /* Force Styling */
+  body .terminal, 
+  body .terminal-wrapper, 
+  body .cmd, 
+  body .cmd .prompt, 
+  body .cmd .cursor,
+  body .terminal-output div div,
+  body .terminal .table, 
+  body .terminal .row {
+    font-family: 'Fira Code', monospace !important;
+    font-size: 12px !important;
+    line-height: 14px !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    --size: 1.2 !important;
+  }
+
+  /* Input line formatting */
+  body .cmd .format, 
+  body .cmd .prompt, 
+  body .cmd .cursor {
+    font-size: 12px !important;
+    line-height: 12px !important;
+  }
+
+  /* Header and bold styling */
+  .terminal b, .terminal strong {
+    font-weight: 700 !important;
+  }
+
+  /* CRT Glow Effect */
+  .terminal {
+    text-shadow: 0 0 1px rgba(0, 255, 0, 0.2);
+  }
+</style>
+
+<script> 
+jQuery(document).ready(function($) {
+    var animation = false;
+
+    // =================================================================
+    // HELP MENU
+    // =================================================================
+    var help = 
+    '\n[[b;white;]System Commands:]\n' +
+    '  [[b;green;]ls]              List profile files (Resume, Projects)\n' +
+    '  [[b;green;]whois]           Basic bio and details\n' +
+    '  [[b;green;]source]          View source code on GitHub\n' +
+    '  [[b;green;]uptime]          Show career length\n' +
+    '  [[b;green;]help]            Show this menu\n' +
+    
+    '\n[[b;white;]Cloud Modules:]\n' +
+    '  [[b;cyan;]k8s]             Check kubernetes cluster status\n' +
+    '  [[b;cyan;]terraform]       View infrastructure plan\n' +
+    '  [[b;cyan;]certifications]  List AWS & Automation certs\n' +
+    
+    '\n[[b;white;]Experience & Content:]\n' +
+    '  [[b;yellow;]work]            Work experience timeline\n' +
+    '  [[b;yellow;]education]       Academic background\n' +
+    '  [[b;yellow;]posts]           Read engineering blog\n' +
+    '  [[b;yellow;]social]          Connect on social media\n' +
+    
+    '\n[[b;white;]Actions:]\n' +
+    '  [[b;grey;]cat <file>]       Read a file (e.g. cat whois.txt)\n' +
+    '  [[b;grey;]startx]           Switch to graphical GUI mode\n' +
+    '  [[b;grey;]curl]             Fetch data (resume or API)\n' +
+    '  [[b;grey;]sudo]             Run as superuser\n';
+
+    // =================================================================
+    // HELPER FUNCTIONS
+    // =================================================================
+    
+    function progressBar(number) {
+        var barLength = Math.round(number / 10);
+        var barFilled = Array(barLength + 1).join("&#9611;");
+        var barBlank = Array(11 - barLength).join("&#9617;");
+        return barFilled + barBlank;
+    }
+
+    function padKey(key, length) {
+        return key + ' '.repeat(length - key.length);
+    }
+
+    function forceArray(data) {
+        if (!data) return [];
+        if (Array.isArray(data)) return data;
+        return [data]; 
+    }
+
+    function formatData(item, type) {
+        var output = '---\n';
+        var color = item.color || 'grey';
+        
+        if (type === 'work') {
+            output += `[[b;${color};]${item.role}]\n`;
+            output += `${item.company}\n`;
+            output += `${item.location}\n`;
+            output += `${item.date}\n\n`;
+            if (item.description) output += `${item.description}\r`;
+        } 
+        else if (type === 'edu') {
+            output += `[[b;${color};]${item.degree}]\n`;
+            output += `${item.school} (${item.date})\n`;
+            if (item.description) output += `${item.description}\r`;
+        }
+        else if (type === 'project') {
+            output += `[[b;${color};]${item.title}]\n`;
+            output += `[[;grey;]${item.date}]\n`;
+            if (item.link) output += `${item.link}\n`;
+            if (item.description) output += `${item.description}\n`;
+            output += `[[;grey;]Type 'cat ${item.slug}' for full details]\r`;
+        }
+        return output;
+    }
+
+    // =================================================================
+    // DATA INITIALIZATION
+    // =================================================================
+    
+    // Whois
+    var whois = [
+    {{ with .Site.Params.whois.details }} 
+        '[[b;grey;]Name:]\t\t\t{{ .name }}\n' + 
+        '[[b;grey;]Profession:]\t\t{{ .profession }}\n' +
+        '[[b;grey;]Location:]\t\t{{ .location }}\n' +
+        {{ if .email }}
+        '[[b;grey;]Email:]\t\t\t{{ .email }}\n' +
+        {{ end }}
+        {{ if .homelink }}
+        '[[b;grey;]Homepage:]\t\t{{ .homelink }}\n' +
+        {{ end }}
+        {{ if .description }}
+        '{{ .description }}' +
+        {{ end }}
+        '\r',
+    {{ end }}
+    ];
+
+    // Social Links
+    function social() { 
+        var hideName = false;
+        let sMap = { 
+            {{ with .Site.Params.social.details }} 
+                {{ range. }}
+                {{ .name }}: "{{ .url }}",
+                {{ end }}
+            {{ end }}
+        };
+
+        {{ if .Site.Params.social.settings.hideName }}
+        hideName = true
+        {{ end }}
+        
+        socialText = []
+        for (let key in sMap) {
+            if (sMap.hasOwnProperty(key)) {
+                if (hideName) {
+                    socialText.push(sMap[key]);
+                } else { 
+                    let longestKeyLength = Math.max(...Object.keys(sMap).map(key => key.length));
+                    socialText.push(`${padKey(key, longestKeyLength)}\t${sMap[key]}`)
+                };
+            }
+        }
+        return socialText;
+    }
+
+    // Work Experience
+    var workRaw = {{ .Site.Data.work | jsonify }};
+    if (typeof workRaw === 'string') { workRaw = JSON.parse(workRaw); }
+    var work = forceArray(workRaw).map(item => formatData(item, 'work'));
+
+    // Education
+    var eduRaw = {{ .Site.Data.education | jsonify }};
+    if (typeof eduRaw === 'string') { eduRaw = JSON.parse(eduRaw); }
+    var education = forceArray(eduRaw).map(item => formatData(item, 'edu'));
+
+    // Projects
+    var projectsRaw = [
+        {{ range where .Site.RegularPages "Section" "projects" }}
+            {
+                title: "{{ .Title }}",
+                date: "{{ .Date.Format "2006" }}",
+                link: "{{ .Params.link }}",
+                description: "{{ .Params.description }}",
+                color: "{{ .Params.color | default "green" }}",
+                slug: "{{ .Slug | default .File.ContentBaseName }}",
+                content: {{ .RawContent | jsonify }}
+            },
+        {{ end }}
+    ];
+    var projects = projectsRaw.map(item => formatData(item, 'project'));
+
+    // Blog Posts
+    var blogList = [
+        {{ range where .Site.RegularPages "Section" "posts" }}
+            {
+                title: "{{ .Title }}",
+                date: "{{ .Date.Format "2006-01-02" }}",
+                slug: "{{ .Slug | default .File.ContentBaseName }}",
+                content: {{ .RawContent | jsonify }}
+            },
+        {{ end }}
+    ];
+
+    // Certifications
+    var certifications = [
+    {{ with .Site.Params.certifications.details }}
+        {{ range . }}
+            '---\n' +
+            '[[b;{{ .color | default "grey" }};]{{ .certName }}]\n' +
+            '{{ .date }}\n' +
+            {{ if .company }}
+            '{{ .company }}\n' +
+            {{ end }}
+            {{ if .description }}
+            '{{ .description }}\n' +
+            {{ end }}
+            {{ if .badge }}
+            'Badge: \t{{ .badge }}\n' +
+            {{ end }}
+            '\r',
+        {{ end }}
+    {{ end }}
+    ];
+
+    // Skills
+    var skills = [
+    {{ with .Site.Params.skills.details }}
+        {{ range . }}
+            '[[b;{{ .color | default "grey" }};]{{ .name }}:]\n' +
+            progressBar({{ .percentage }}) +
+            '{{ .percentage }}' + '%\n' +
+            {{ if .description }}
+            '{{ .description }}\n' +
+            {{ end }}
+            '\r',
+        {{ end }}
+    {{ end }}
+    ];
+
+    // K8s
+    var k8s = [
+    {{ with .Site.Params.k8s }}
+        '[[b;{{ .titleColor | default "cyan" }};]{{ .title }}]\n' +
+        '[[;{{ .contentColor | default "green" }};]{{ .content }}]\n',
+    {{ end }}
+    ];
+  
+    // Terraform
+    var terraform = [
+    {{ with .Site.Params.terraform }}
+        '[[b;{{ .titleColor }};]{{ .title }}]\n' +
+        '[[;{{ .contentColor }};]{{ .content }}]\n',
+    {{ end }}
+    ];
+
+    // Misc
+    var misc = [
+    {{ with .Site.Params.misc }}
+        '[[b;{{ .titleColor }};]{{ .title }}]\n' +
+        '[[;{{ .contentColor }};]{{ .content }}]\n',
+    {{ end }}
+    ];
+
+    // Source
+    var source = '  [[b;white;]GITHUB REPOSITORY:]\n' +
+              '      _ __ ___  _   _ \n' +
+              '     | \'_ ` _ \\| | | |\n' +
+              '     | | | | | | |_| |\n' +
+              '     |_| |_| |_|\\__, |\n' +
+              '                |___/ \n\n' +
+              '  [[;grey;]Branch: main]\n' +
+              '  [[;grey;]Status: Public]\n' +
+              '  [[;grey;]License: MIT]\n';
+
+    // =================================================================
+    // COMMAND FUNCTIONS
+    // =================================================================
+
+    function posts(term) {
+        term.echo("\n[[b;white;]Engineering Blog:]\n");
+        if (blogList.length === 0) {
+            term.echo("  [[;grey;]No posts found. (Add markdown files to content/posts/)]");
+        } else {
+            blogList.forEach(function(post) {
+                term.echo(`  [[;cyan;]${post.date}]  [[b;white;]${post.title}]`);
+                term.echo(`  [[;grey;]Type 'cat ${post.slug}' to read]\n`);
+            });
+        }
+        term.echo("\r");
+    }
+
+    // =================================================================
+    // TERMINAL INITIALIZATION
+    // =================================================================
+
+    $('body').terminal(function(command, term) {
+        var cmdArr = command.split(/[ ]+/); 
+        var useLess = false;
+        
+        {{if .Site.Params.useLess }}
+        useLess = true;
+        {{ end }}
+
+        // Echo Array Helper
+        function echoArray(array) {
+            if (useLess) {
+                term.less(array, {
+                    onExit: function () {
+                        term.set_command('');
+                        term.scroll_to_bottom();
+                    },
+                });
+            } else {
+                for (i = 0; i < array.length; i += 1) {
+                    term.echo(array[i]);
+                }
+            }
+        }
+
+        // Progress Bar Helper
+        function progress(percent, width) {
+            var size = Math.round(width*percent/100);
+            var left = '', taken = '', i;
+            for (i=size; i--;) {
+                taken += '=';
+            }
+            if (taken.length > 0) {
+                taken = taken.replace(/=$/, '>');
+            }
+            for (i=width-size; i--;) {
+                left += ' ';
+            }
+            return '[' + taken + left + '] ' + percent + '%';
+        }
+
+        // Loading Animation
+        function loading() {
+            var i = 0, size = 30;
+            string = progress(0, size);
+            term.set_prompt(progress);
+            animation = true;
+            
+            (function loop() {
+                string = progress(i++, size);
+                term.set_prompt(string);
+                if (i < 100) {
+                    timer = setTimeout(loop, 10);
+                } else {
+                    term.echo(progress(i, size) + ' [[b;green;]OK]')
+                        .set_prompt('[[b;cyan;][user@myterminal\\]]: ');
+                    animation = false;
+                }
+            })();
+        }
+
+        // =================================================================
+        // COMMAND SWITCH
+        // =================================================================
+        
+        switch(cmdArr[0]) {
+            case 'help':
+            case '?':
+                term.echo(help);
+                break;
+
+            case 'ls':
+                var arg = cmdArr[1];
+                var isDetailed = (arg === '-al' || arg === '-la' || arg === '-l' || arg === '-a');
+
+                if (isDetailed) {
+                    term.echo("[[b;white;]total 64]");
+                    term.echo("drwxr-xr-x  2 faisal  staff   4096 Dec 21 20:20 [[b;blue;].]");
+                    term.echo("drwxr-xr-x  2 faisal  staff   4096 Dec 21 20:20 [[b;blue;]..]");
+                    term.echo("-rw-r--r--  1 faisal  staff   1024 Dec 21 20:20 [[;orange;]whois.txt]");
+                    term.echo("-rw-r--r--  1 faisal  staff   2048 Dec 21 20:20 [[;orange;]experience.log]");
+                    term.echo("-rw-r--r--  1 faisal  staff   1024 Dec 21 20:20 [[;orange;]education.pdf]");
+                    term.echo("-rw-r--r--  1 faisal  staff   4096 Dec 21 20:20 [[;orange;]projects.md]");
+                    term.echo("-rwxr-xr-x  1 faisal  staff  65536 Dec 21 20:20 [[b;green;]resume.pdf]");
+        
+                    term.echo("\n[[b;green;]Reading system files...]\n");
+
+                    setTimeout(() => {
+                        term.echo("[[b;green;]>>> READING: whois.txt]");
+                        echoArray(whois);
+                        
+                        term.echo("\n[[b;green;]>>> READING: experience.log]");
+                        echoArray(work);
+                        
+                        term.echo("\n[[b;green;]>>> READING: projects.md]");
+                        echoArray(projects);
+
+                        term.echo("\n"); 
+
+                        term.read("Do you want to download the PDF version of my resume? (y/n): ", function(input) {
+                            if (input.toLowerCase() === 'y' || input.toLowerCase() === 'yes') {
+                                term.echo("[[b;yellow;]System:] Initializing secure download...");
+                                loading(); 
+                                
+                                setTimeout(function() {
+                                    const link = document.createElement('a');
+                                    link.href = "/resume.pdf"; 
+                                    link.download = "Faisal_Resume.pdf";
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                    term.echo("[[b;green;]✓ Download successful.]");
+                                }, 2000);
+                            } else {
+                                term.echo("[[;grey;]Download cancelled by user.]");
+                            }
+                        });
+                    }, 1000);
+                } else {
+                    term.echo("[[;orange;]whois.txt]  [[;orange;]experience.log]  [[;orange;]projects.md]  [[b;green;]resume.pdf]");
+                }
+                break;
+                
+            case 'whois':
+                {{ if .Site.Params.whois.settings.useLess }}
+                useLess = true;
+                {{ end }}
+                echoArray(whois);
+                break;
+
+            case 'social':
+                {{ if .Site.Params.social.settings.useLess }}
+                useLess = true;
+                {{ end }}
+                echoArray(social());
+                break;
+
+            case 'work':
+                {{ if .Site.Params.work.settings.useLess }}
+                useLess = true;
+                {{ end }}
+                echoArray(work);
+                break;
+
+            case 'education':
+                {{ if .Site.Params.education.settings.useLess }}
+                useLess = true;
+                {{ end }}
+                echoArray(education);
+                break;
+
+            case 'skills':
+                {{ if .Site.Params.skills.settings.useLess }}
+                useLess = true;
+                {{ end }}
+                echoArray(skills);
+                break;
+
+            case 'k8s':
+                {{ if .Site.Params.k8s.settings.useLess }}
+                useLess = true;
+                {{ end }}
+                echoArray(k8s);
+                break;
+
+            case 'terraform':
+                {{ if .Site.Params.terraform.settings.useLess }}
+                useLess = true;
+                {{ end }}
+                echoArray(terraform);
+                break;
+
+            case 'projects':
+                {{ if .Site.Params.projects.settings.useLess }}
+                useLess = true;
+                {{ end }}
+                echoArray(projects);
+                break;
+
+            case 'certifications':
+                {{ if .Site.Params.certifications.settings.useLess }}
+                useLess = true;
+                {{ end }}
+                echoArray(certifications);
+                break;
+
+            case '{{ .Site.Params.misc.commandName | default "misc"}}':
+                {{ if .Site.Params.misc.settings.useLess }}
+                useLess = true;
+                {{ end }}
+                echoArray(misc);
+                break;
+
+            case 'uptime':
+                term.echo("[[b;green;] 14:02:00 up 12 years, 2 months, 1 user, load average: 0.99, 0.95, 0.90]");
+                term.echo("System has been running since [[b;white;]2014] (My Career Start)");
+                break;
+
+            case 'clear':
+                term.clear();
+                break;
+
+            case 'sudo':
+                term.echo("\n[[b;red;]user is not in the sudoers file. This incident will be reported.]\n");
+                break;
+
+            {{ if .Site.Params.startxLocation }}
+            case 'startx':
+                term.echo("HTTP/1.1 200 OK");
+                term.echo("Content-Type: text/html");
+                term.echo("Server: Cloudflare");
+                term.echo("Connecting to remote host...");
+                loading();
+                setTimeout(function(){
+                    window.open("{{ .Site.Params.startxLocation }}", "_blank");
+                }, 2000);
+                break;
+            {{ end }}
+
+            case ':(){:|:&};:':
+                term.echo("nice try");
+                break;
+
+            case 'source':
+                term.echo("[[;blue;]Connecting to github.com...]");
+                term.echo("remote: Enumerating objects: 24, done.");
+                term.echo("remote: Counting objects: 100% (24/24), done.");
+                loading(); 
+                setTimeout(function() {
+                    term.echo("\n" + source);
+                    term.echo("\n[[b;yellow;]Action:] Would you like to open the GitHub repo? (y/n)");
+                    term.read("", function(input) {
+                        if (input.toLowerCase() === 'y' || input.toLowerCase() === 'yes') {
+                            term.echo("[[;green;]Opening repository in new tab...]");
+                            window.open("https://github.com/mohammadzfaisal", "_blank");
+                        } else {
+                            term.echo("Staying in terminal.");
+                        }
+                    });
+                }, 2000);
+                break;
+
+            case 'exit':
+                term.echo("Terminating session...");
+                loading();
+                setTimeout(function() {
+                    term.clear();
+                    term.echo("{{ .Site.Params.exitMessage }}");
+                }, 1000);
+                break;
+
+            {{ if .Site.Params.version }}
+            case 'version':
+                term.echo("{{ .Site.Params.version }}");
+                break;
+            {{ end }}
+
+            case 'cat':
+                if (cmdArr.length < 2) {
+                    term.echo("Usage: cat <filename>");
+                } else {
+                    var filename = cmdArr[1];
+                    var post = blogList.find(p => p.slug === filename);
+                    var project = projectsRaw.find(p => p.slug === filename);
+
+                    if (filename === 'whois.txt') { 
+                        echoArray(whois); 
+                    } 
+                    else if (filename === 'experience.log') { 
+                        echoArray(work); 
+                    } 
+                    else if (filename === 'projects.md') { 
+                        echoArray(projects); 
+                    } 
+                    else if (filename === 'education.txt') { 
+                        echoArray(education); 
+                    } 
+                    else if (filename === 'resume.pdf') { 
+                        term.echo("Binary file. Use 'curl resume' to download."); 
+                    } 
+                    else if (post) {
+                        term.echo("\n[[b;white;]" + post.title + "]");
+                        term.echo("[[;grey;]Date: " + post.date + "]");
+                        term.echo("---------------------------------------------------");
+                        term.echo(post.content + "\n");
+                    }
+                    else if (project) {
+                        term.echo("\n[[b;green;]PROJECT: " + project.title + "]");
+                        if(project.link) term.echo("[[;grey;]Link: " + project.link + "]");
+                        term.echo("---------------------------------------------------");
+                        term.echo(project.content + "\n");
+                    }
+                    else {
+                        term.echo("[[b;red;]Error:] File '" + filename + "' not found.");
+                    }
+                }
+                break;
+
+            case 'curl':
+                term.echo("[[;green;]Connecting to remote host...]");
+                loading(); 
+                setTimeout(function() {
+                    var target = cmdArr[1];
+                    var allowedFiles = {
+                        'resume': 'resume.pdf',
+                        'resume.pdf': 'resume.pdf',
+                        'cv': 'resume.pdf'
+                    };
+
+                    if (allowedFiles[target]) {
+                        var realFile = allowedFiles[target];
+                        term.echo("HTTP 200 OK: Found " + realFile);
+                        term.echo("Downloading " + realFile + "...");
+                        
+                        const link = document.createElement('a');
+                        link.href = "/" + realFile; 
+                        link.download = "Faisal_" + realFile;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        
+                        term.echo("[[b;green;]✓ Download Complete.]");
+                    } 
+                    else if (target === 'github') {
+                        term.echo("HTTP 301 Moved Permanently: Redirecting to GitHub...");
+                        window.open("https://github.com/mohammadzfaisal", "_blank");
+                    }
+                    else if (target === 'linkedin') {
+                        term.echo("HTTP 301 Moved Permanently: Redirecting to LinkedIn...");
+                        window.open("https://linkedin.com/in/mohammadzfaisal", "_blank");
+                    }
+                    else if (target === 'ysap.sh') {
+                         term.echo("HTTP 301 Moved Permanently: Redirecting to ysap.sh...");
+                         window.open("https://ysap.sh", "_blank");
+                    }
+                    else if (target && target.includes('.')) {
+                        term.echo("[[b;red;]HTTP 403 Forbidden:] Access Denied.");
+                        term.echo("You do not have permission to access '" + target + "' on this server.");
+                    }
+                    else {
+                        $.get('https://v2.jokeapi.dev/joke/Programming?type=single&safe-mode', function(data) {
+                            if(data.joke) {
+                                term.echo('[[b;cyan;]API RESPONSE:] "' + data.joke + '"');
+                            } else {
+                                term.echo("[[;red;]Error: Connection timeout.]");
+                            }
+                        });
+                    }
+                }, 1000); 
+                break;
+
+            {{ if .Site.Params.blog }}
+            case 'posts':
+                posts(term);
+                break;
+            {{ end }}
+
+            case '':
+                break;
+
+            default:
+                term.echo("\nunknown command: " + command);
+                term.echo("please type 'help' or '?' for a list of available commands\n");
+        }
+    }, {
+        {{ if .Site.Params.bootsequence }} 
+            greetings: false,
+            onInit: function(term) {
+                term.pause(true);
+
+                var generatedIP = "10.0." + (Math.floor(Math.random() * 254) + 1) + "." + (Math.floor(Math.random() * 254) + 1);
+                var bootText = `{{ .Site.Params.bootsequence | safeJS }}`.replace(/__IP__/g, generatedIP);
+
+                term.typing('echo', 5, bootText, function() {
+                    term.echo("\n[[b;white;]Starting Cloud Services...]");
+                    term.echo("Loading: [          ] 0%");
+                    
+                    let percent = 0;
+                    const interval = setInterval(function() {
+                        percent += 2;
+                        let barColor = (percent < 100) ? "orange" : "green";
+                        let barString = progressBar(percent)
+                            .replace(/&#9611;/g, "█")
+                            .replace(/&#9617;/g, " ");
+
+                        term.update(-1, `Loading: [[;${barColor};]${barString}] ${percent}%`);
+
+                        if (percent >= 100) {
+                            clearInterval(interval);
+                            setTimeout(function() {
+                                term.clear();
+                                term.echo("[[b;{{ .Site.Params.greetingColor | default "white" }};]" + `{{ .Site.Params.greeting | safeJS }}` + "]");
+                                term.resume();
+                            }, 800);
+                        }
+                    }, 40);
+                });
+            },
+        {{ else }} 
+            greetings: "[[b;{{ .Site.Params.greetingColor | default "white" }};]{{ .Site.Params.greeting | safeJS }}]",
+        {{ end }}
+
+        prompt: '{{ with .Site.Params.prompt }}{{ with .core }}[[;{{ .beforeColor | default "grey" }};]{{ .before }}][[;{{ .color | default "grey" }};]{{ .text }}][[;{{ .afterColor | default "gey" }};]{{ .after }}]{{ end }}{{ with .separator }}[[;{{ .separatorColor | default "grey" }};]{{ .text }}]{{ end }}{{ with .path }}[[;{{ .beforeColor | default "grey" }};]{{ .before }}][[;{{ .color | default "grey" }};]{{ .text | default ":~$" }}][[;{{ .afterColor | default "grey" }};]{{ .after }}]{{ end }}{{ with .extra }}[[;{{ .color | default "grey" }};]{{ .text }}]{{ end }}{{ end }}',
+
+        keydown: function(e, term) {
+            if (animation) {
+                if (e.which == 68 && e.ctrlKey) {
+                    clearTimeout(timer);
+                    animation = false;
+                    term.echo(string + ' [[b;red;]FAIL]')
+                    .set_prompt(prompt);
+                }
+                return false;
+            }
+        },
+        autocompleteMenu: true,
+        completion: ['help', 'whois', 'uptime', 'k8s', 'terraform', 'projects', 'ls', 'ls -al', 'social', 'work', 'education', 'skills', 'certifications', 'startx', 'posts', 'sudo', 'clear', 'cat', 'exit','curl']
+    });
+});
+</script>
+{{ end }}
