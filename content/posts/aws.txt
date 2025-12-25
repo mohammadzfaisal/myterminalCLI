@@ -1,2 +1,4 @@
-[[b;orange;]AWS Networking] 
-Coming soon...
+AWS Networking Guide
+
+Here is how VPCs work...
+[[@;;]content/images/Andrew.jpg]

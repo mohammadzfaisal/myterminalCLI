@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal View</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* 2. DRACULA TERMINAL THEME */
+        :root {
+            --drac-bg: #282a36;
+            --drac-fg: #f8f8f2;
+            --drac-cyan: #8be9fd;
+            --drac-orange: #ffb86c;
+            --drac-green: #50fa7b;
+            --drac-purple: #bd93f9;
+            --drac-comment: #6272a4;
+        }
+
+        body {
+            background-color: var(--drac-bg);
+            color: var(--drac-fg);
+            font-family: 'Fira Code', monospace; /* Fira Font applied */
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        /* The main container - looks like a terminal window */
+        #terminal-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid var(--drac-comment); /* Subtle border */
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            white-space: pre-wrap; /* Preserve text formatting */
+        }
+
+        /* Navigation Link styling */
+        .back-link {
+            color: var(--drac-comment);
+            text-decoration: none;
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        .back-link:hover { color: var(--drac-cyan); }
+        .prompt-char { color: var(--drac-green); margin-right: 10px; }
+
+        /* IMAGE STYLING FOR DARK MODE */
+        img {
+            max-width: 100%;
+            border: 2px solid var(--drac-comment);
+            border-radius: 4px;
+            margin: 20px 0;
+            /* Optional: Slight dimming so images don't blind you in dark mode */
+            filter: brightness(0.9); 
+        }
+
+        /* --- THE AUTOMATIC HEADER STYLE --- */
+        .terminal-header {
+            color: var(--drac-cyan); /* Dracula Cyan */
+            font-weight: 700;        /* Bold */
+            font-size: 1.6em;
+            display: block;
+            margin-bottom: 1.5em;
+            border-bottom: 2px dashed var(--drac-comment); /* Terminal separator */
+            padding-bottom: 15px;
+        }
+        .header-prompt { color: var(--drac-purple); margin-right: 10px;}
+
+        /* --- TRANSLATED TERMINAL COLORS (Dracula Palette) --- */
+        /* These map the codes in your .txt file to CSS classes */
+        .term-orange { color: var(--drac-orange); font-weight: bold; }
+        .term-blue { color: var(--drac-cyan); font-weight: bold; } /* Mapping 'blue' to cyan for better visibility */
+        .term-cyan { color: var(--drac-cyan); font-weight: bold; }
+        .term-green { color: var(--drac-green); font-weight: bold; }
+        .term-grey { color: var(--drac-comment); }
+        .term-purple { color: var(--drac-purple); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="terminal-container">
+        <a href="javascript:history.back()" class="back-link"><span class="prompt-char">$</span>cd ..</a>
+        <div id="content">
+            <span style="color: var(--drac-cyan)">Loading data..._</span>
+        </div>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const postSlug = urlParams.get('post');
+        // Determine if it's a blog post or project based on URL param, default to posts if unsure
+        const type = urlParams.get('type') || 'posts'; 
+        const filePath = `/content/${type}/${postSlug}.txt`;
+
+        if(postSlug) {
+            fetch(filePath)
+                .then(response => {
+                    if (!response.ok) throw new Error("File not found");
+                    return response.text();
+                })
+                .then(text => {
+                    // Run the translation engine
+                    const html = parseTerminalToHTML(text);
+                    document.getElementById('content').innerHTML = html;
+                    document.title = "./" + postSlug + " [" + type + "]";
+                })
+                .catch(err => {
+                    document.getElementById('content').innerHTML = `<span class="term-red">Error 404: File '${filePath}' not found.</span>`;
+                });
+        }
+
+        // --- THE ENHANCED TRANSLATOR ENGINE ---
+        function parseTerminalToHTML(text) {
+            // Split text into lines to handle the header separately
+            let lines = text.split('\n');
+            
+            if (lines.length === 0) return "";
+
+            // 1. PROCESS HEADER (Line 1)
+            // Get first line, strip any existing terminal formatting to get raw text
+            let rawTitle = lines[0].replace(/\[\[.*?\](.*?)\]/g, '$1');
+            // Wrap it in our cool Dracula header styling with a fake prompt
+            let styledHeader = `<span class="terminal-header"><span class="header-prompt">➜</span>${rawTitle}</span>`;
+
+            // 2. PROCESS BODY (Remaining lines)
+            let bodyText = lines.slice(1).join('\n');
+
+            // Handle Images: [[@;;]path/to/img] -> <img src="...">
+            bodyText = bodyText.replace(/\[\[@;;\](.*?)\]/g, '<img src="$1">');
+
+            // Handle Colors: Map terminal codes to Dracula CSS classes
+            bodyText = bodyText.replace(/\[\[b;orange;\](.*?)\]/g, '<span class="term-orange">$1</span>');
+            bodyText = bodyText.replace(/\[\[b;cyan;\](.*?)\]/g, '<span class="term-cyan">$1</span>');
+            bodyText = bodyText.replace(/\[\[b;blue;\](.*?)\]/g, '<span class="term-blue">$1</span>');
+            bodyText = bodyText.replace(/\[\[b;green;\](.*?)\]/g, '<span class="term-green">$1</span>');
+            bodyText = bodyText.replace(/\[\[b;grey;\](.*?)\]/g, '<span class="term-grey">$1</span>');
+            bodyText = bodyText.replace(/\[\[b;purple;\](.*?)\]/g, '<span class="term-purple">$1</span>');
+            
+            // Cleanup: Remove white/default tags, leave plain text
+            bodyText = bodyText.replace(/\[\[b;white;\](.*?)\]/g, '$1');
+            // Final catch-all to strip broken tags so they don't show raw
+             bodyText = bodyText.replace(/\[\[.*?\](.*?)\]/g, '$1');
+
+            // Combine header and body
+            return styledHeader + "\n" + bodyText;
+        }
+    </script>
+</body>
+</html>
