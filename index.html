@@ -48,6 +48,12 @@
 <body>
 
 <script>
+// --- EMAIL CONFIGURATION (Obfuscated) ---
+var emailUser = "mohammadzfaisal";     // Your username
+var emailDomain = "gmail.com";         // Your provider
+var myEmail = emailUser + "@" + emailDomain; 
+// Now 'myEmail' holds the full address, but bots reading the raw file won't see it easily.
+
 var bootComplete = false;
 
 jQuery(document).ready(function($) {
@@ -122,7 +128,7 @@ jQuery(document).ready(function($) {
         '[[b;grey;]Name:]\t\t\tMohammad Faisal\n' + 
         '[[b;grey;]Profession:]\t\tCloud Engineer\n' +
         '[[b;grey;]Location:]\t\tCalgary, AB\n' +
-        '[[b;grey;]Email:]\t\t\tfaisal@example.com\n' +
+        '[[b;grey;]Email:]\t\t\t' + myEmail + '\n' +
         '[[b;grey;]Homepage:]\t\thttps://ysap.sh\n' +
         'Passionate about cloud infrastructure and DevOps automation.' +
         '\r'
