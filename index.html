@@ -70,10 +70,10 @@ jQuery(document).ready(function($) {
     '  [[b;yellow;]posts]           Read engineering blog\n' +
     '  [[b;yellow;]social]          Connect on social media\n' +
     '\n[[b;white;]Actions:]\n' +
-    '  [[b;grey;]cat <file>]       Read a file (e.g. cat whois.txt)\n' +
-    '  [[b;grey;]startx]           Switch to graphical GUI mode\n' +
-    '  [[b;grey;]curl]             Fetch data (resume or API)\n' +
-    '  [[b;grey;]sudo]             Run as superuser\n';
+    '  [[b;grey;]cat <file>]      Read a file (e.g. cat whois.txt)\n' +
+    '  [[b;grey;]startx]          Switch to graphical GUI mode\n' +
+    '  [[b;grey;]curl]            Fetch data (resume or API)\n' +
+    '  [[b;grey;]sudo]            Run as superuser\n';
 
      function progressBar(number) {
         var barLength = Math.round(number / 10);
@@ -156,9 +156,10 @@ jQuery(document).ready(function($) {
     var projectsRaw = [
         {
             title: "Kubernetes Cluster",
-            date: "2024",
-            link: "https://github.com/example",
+            date: "2026",
+            link: "https://github.com/mohammadzfaisal/cloud-dashboard",
             description: "Production K8s setup",
+            file: "content/projects/cloud-dashboard.txt",
             color: "cyan",
             slug: "k8s-cluster",
             content: "Full kubernetes cluster configuration with monitoring and auto-scaling."
@@ -171,7 +172,8 @@ jQuery(document).ready(function($) {
             title: "Getting Started with Terraform",
             date: "2024-12-01",
             slug: "terraform-intro",
-            content: "A comprehensive guide to infrastructure as code using Terraform."
+            file: "content/posts/terraform-guide.txt"
+            // content: "A comprehensive guide to infrastructure as code using Terraform."
         }
     ];
 
@@ -430,14 +432,13 @@ jQuery(document).ready(function($) {
                 term.echo("v1.0.0");
                 break;
 
-            case 'cat':
+           case 'cat':
                 if (cmdArr.length < 2) {
                     term.echo("Usage: cat <filename>");
                 } else {
                     var filename = cmdArr[1];
-                    var post = blogList.find(function(p) { return p.slug === filename; });
-                    var project = projectsRaw.find(function(p) { return p.slug === filename; });
-
+                    
+                    // 1. Check Hardcoded System Files FIRST (Keep existing logic)
                     if (filename === 'whois.txt') { 
                         echoArray(whois); 
                     } 
@@ -453,24 +454,47 @@ jQuery(document).ready(function($) {
                     else if (filename === 'resume.pdf') { 
                         term.echo("Binary file. Use 'curl resume' to download."); 
                     } 
-                    else if (post) {
-                        term.echo("\n[[b;white;]" + post.title + "]");
-                        term.echo("[[;grey;]Date: " + post.date + "]");
-                        term.echo("---------------------------------------------------");
-                        term.echo(post.content + "\n");
-                    }
-                    else if (project) {
-                        term.echo("\n[[b;green;]PROJECT: " + project.title + "]");
-                        if(project.link) term.echo("[[;grey;]Link: " + project.link + "]");
-                        term.echo("---------------------------------------------------");
-                        term.echo(project.content + "\n");
-                    }
+                    
+                    // 2. Dynamic Content (Posts & Projects)
                     else {
-                        term.echo("[[b;red;]Error:] File '" + filename + "' not found.");
+                        // Search in both lists
+                        var post = blogList.find(function(p) { return p.slug === filename; });
+                        var project = projectsRaw.find(function(p) { return p.slug === filename; });
+                        var item = post || project;
+
+                        if (item) {
+                            // Print the Header (Title, Date, etc.)
+                            var headerColor = post ? "white" : "green"; // White for blog, Green for projects
+                            term.echo("\n[[b;" + headerColor + ";]" + item.title + "]");
+                            
+                            if (item.date) term.echo("[[;grey;]Date: " + item.date + "]");
+                            if (item.link) term.echo("[[;grey;]Link: " + item.link + "]");
+                            term.echo("---------------------------------------------------");
+
+                            // CHECK: Do we fetch from a file OR read hardcoded content?
+                            if (item.file) {
+                                term.pause(); // Stop user typing while we load
+                                
+                                $.get(item.file, function(data) {
+                                    term.echo(data);
+                                    term.echo("\n"); // Add spacing at bottom
+                                    term.resume();   // Unlock terminal
+                                })
+                                .fail(function() {
+                                    term.echo("[[b;red;]Error:] Could not load file: " + item.file);
+                                    term.resume();
+                                });
+                            } 
+                            else if (item.content) {
+                                // Fallback for old items that still use hardcoded strings
+                                term.echo(item.content + "\n");
+                            }
+                        } else {
+                            term.echo("[[b;red;]Error:] File '" + filename + "' not found.");
+                        }
                     }
                 }
                 break;
-
             case 'curl':
                 term.echo("[[;green;]Connecting to remote host...]");
                 loading(); 
@@ -555,8 +579,8 @@ jQuery(document).ready(function($) {
                 "[[b;green;]OK] Cloud Infrastructure Ready",
                 "",
                 "[[;grey;][  0.952110]] Checking Egress Rules...",
-                "[[b;#ff6600;][  WARN  ]] [[;yellow;]Internet Breakout Detected (UDP/443).]",
-                "[[b;#00d9ff;][  INFO  ]] [[;white;]ICMP (Pong) is preferred for connectivity checks.]",
+                "[[;#ff6600;]&#91;][[b;#ff6600;]  WARN  ][[;#ff6600;]&#93;] [[;yellow;]Internet Breakout Detected (UDP/443).]",
+                "[[;#00d9ff;]&#91;][[b;#00d9ff;]  INFO  ][[;#00d9ff;]&#93;] [[;white;]ICMP (Pong) is preferred for connectivity checks.]",
                 "",
                 "[[;grey;][  1.210442]] Initializing CloudOS Kernel 1.4.2 (root@faisal-cloud)",
                 "[[;grey;][  1.450122]] [k8s] Scheduling core-services pods...",
