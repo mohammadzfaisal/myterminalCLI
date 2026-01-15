@@ -2,7 +2,8 @@ backend:
   name: github
   repo: mohammadzfaisal/myterminalCLI
   branch: main
-  auth_endpoint: https://decapcms.org/.netlify/functions/auth
+  base_url: https://decapcms.org
+  auth_endpoint: /.netlify/functions/auth
 
 site_url: https://mfaisal.pages.dev
 
