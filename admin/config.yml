@@ -107,7 +107,8 @@ collections:
     label: Content Posts
     folder: content/posts
     create: true
-    nested: true
+    nested:
+      depth: 2
     extension: txt
     format: raw
     fields:
