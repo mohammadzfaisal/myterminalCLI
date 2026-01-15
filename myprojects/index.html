@@ -1,148 +1,315 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects - Mohammad Faisal</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --drac-bg: #282a36;
-            --drac-fg: #f8f8f2;
-            --drac-cyan: #8be9fd;
-            --drac-green: #50fa7b;
-            --drac-purple: #bd93f9;
-            --drac-comment: #6272a4;
-            --drac-red: #ff5555;
-            --drac-orange: #ffb86c;
-        }
+<!doctype html>
+<html>
+	<head>
+		<title>projects | mfa.sh</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        body {
-            background-color: var(--drac-bg);
-            color: var(--drac-fg);
-            font-family: 'Fira Code', monospace;
-            margin: 0;
-            padding: 40px 20px;
-        }
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
-        .container { max-width: 1000px; margin: 0 auto; }
-        .header { border-bottom: 2px solid var(--drac-comment); padding-bottom: 20px; margin-bottom: 40px; }
-        .back-btn { color: var(--drac-cyan); text-decoration: none; font-size: 0.9em; }
+		<style>
+/**
+ * mfa.sh CSS (based on ysap.sh)
+ *
+ * Author: Mohammad Faisal
+ * License: MIT
+ */
 
-        /* SEARCH BAR - Feature added from blog engine */
-        .search-container { margin-bottom: 30px; }
-        #project-search {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--drac-comment);
-            background: #343746;
-            color: var(--drac-fg);
-            font-family: 'Fira Code', monospace;
-            outline: none;
-        }
-        #project-search:focus { border-color: var(--drac-purple); }
+/* terminal theme colors */
+:root {
+	--color1: #5fffff;
+	--color2: #ff87af;
+	--color3: #87ff87;
+	--color4: #666;
+	--color5: #ffd7af;
+}
 
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-        }
+/* reset */
+* {
+	margin: 0;
+	padding: 0;
+}
 
-        .project-card {
-            background: #343746;
-            border: 1px solid var(--drac-comment);
-            border-radius: 8px;
-            padding: 20px;
-            transition: transform 0.2s, border-color 0.2s;
-            display: flex;
-            flex-direction: column;
-        }
+ul {
+	list-style-type: none;
+}
 
-        .project-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--drac-purple);
-        }
+/* helper classes */
+.center {
+	text-align: center;
+}
 
-        .project-card h2 { margin: 0 0 10px 0; font-size: 1.2em; color: var(--drac-cyan); }
-        .project-card p { font-size: 0.9em; color: #bdc3c7; flex-grow: 1; line-height: 1.5; }
+.title {
+	color: var(--color3);
+}
 
-        .badge-container { margin: 15px 0; display: flex; flex-wrap: wrap; gap: 8px; }
-        .badge {
-            font-size: 0.7em;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #000; /* Dark text for contrast */
-        }
+.highlight {
+	color: var(--color3);
+}
 
-        .view-link {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 8px 0;
-            color: var(--drac-purple);
-            text-decoration: none;
-            font-weight: bold;
-            border-top: 1px solid var(--drac-comment);
-        }
-    </style>
-</head>
-<body>
+.hidden {
+	display: none;
+}
 
-    <div class="container">
-        <div class="header">
-            <a href="/" class="back-btn">$ cd ..</a>
-            <h1 style="color: var(--drac-green);">/projects</h1>
-        </div>
+.shadow {
+	border: 1px solid #87ff8755;
+	box-shadow: 0 0 200px #87ff8734;
+}
 
-        <div class="search-container">
-            <input type="text" id="project-search" placeholder="Filter projects by name or tech stack...">
-        </div>
+@media (max-width: 650px) {
+	.hide-mobile {
+		display: none;
+	}
+}
 
-        <div id="project-grid" class="project-grid">
-            </div>
-    </div>
+/* layout and design */
+body {
+	background-color: #000;
+	color: var(--color5);
+	font-size: 13px;
+}
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let allProjects = [];
+body, code {
+	font-family: "Fira Mono", monospace;
+	font-weight: 400;
+	font-style: normal;
+}
 
-            fetch('/data.json')
-                .then(res => res.json())
-                .then(data => {
-                    allProjects = data.projects;
-                    renderProjects(allProjects);
-                });
+b, strong, h1, h2, h3, h4, h5, h6 {
+	font-weight: 900;
+}
 
-            // LIVE SEARCH FEATURE
-            document.getElementById('project-search').addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
-                const filtered = allProjects.filter(p => 
-                    p.title.toLowerCase().includes(term) || 
-                    p.description.toLowerCase().includes(term) ||
-                    p.badges.some(b => b.name.toLowerCase().includes(term))
-                );
-                renderProjects(filtered);
-            });
+#container {
+	position: relative;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 10px;
+	max-width: 800px;
+	padding: 0 6px;
+}
 
-            function renderProjects(projects) {
-                const grid = document.getElementById('project-grid');
-                grid.innerHTML = projects.map(p => `
-                    <div class="project-card">
-                        <div class="badge-container">
-                            ${p.badges.map(b => `
-                                <span class="badge" style="background: ${b.color}">${b.name}</span>
-                            `).join('')}
-                        </div>
-                        <h2>${p.title}</h2>
-                        <p>${p.description}</p>
-                        <a href="/view.html?post=${p.id}&type=projects" class="view-link">View Details_</a>
-                    </div>
-                `).join('');
-            }
-        });
-    </script>
-</body>
+a, a:visited {
+	color: var(--color1);
+	text-decoration: none;
+}
+
+h1.title {
+	margin-bottom: 21px;
+}
+
+#top-nav {
+	text-align: left;
+	border-bottom: 1px solid #87ff8755;
+	margin-bottom: 21px;
+}
+
+#top-nav > ul {
+	list-style: none;
+	overflow: hidden;
+}
+
+#top-nav > ul > li {
+	float: left;
+}
+
+#top-nav > ul > li.right {
+	float: right;
+}
+
+#top-nav > ul > li > a {
+	display: block;
+	text-align: center;
+	color: var(--color5);
+	padding: 14px 13px;
+	text-decoration: none;
+}
+
+#top-nav > ul > li a:hover {
+	background-color: #333;
+}
+
+#top-nav > ul > li .active {
+	color: var(--color3);
+}
+
+p.content {
+	max-width: 620px;
+	line-height: 1.5;
+}
+
+.footer {
+	text-align: center;
+	font-size: 12px;
+	margin-top: 10px;
+	padding-top: 0;
+}
+
+/* table styles */
+table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 30px;
+}
+
+table.shadow {
+	border: 1px solid #87ff8755;
+	box-shadow: 0 0 200px #87ff8734;
+}
+
+table thead {
+	background-color: #111;
+}
+
+table thead th {
+	padding: 15px;
+	text-align: left;
+	color: var(--color3);
+	border-bottom: 1px solid #87ff8755;
+	font-weight: 900;
+}
+
+table tbody tr {
+	background-color: #111;
+}
+
+table tbody tr:hover {
+	background-color: #1a1a1a;
+}
+
+table tbody td {
+	padding: 15px;
+	border-bottom: 1px solid #333;
+	color: var(--color5);
+}
+
+table tbody td.title {
+	color: var(--color1);
+}
+
+table tbody td.description {
+	color: var(--color5);
+}
+
+table tbody td.link a {
+	color: var(--color1);
+}
+
+table tbody td.link a:hover {
+	text-decoration: underline;
+}
+
+table tbody .code {
+	color: var(--color3);
+	font-family: "Fira Mono", monospace;
+}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<div id="top-nav">
+				<ul>
+					<li><a href="/resume.html">home</a></li>
+					<li><a href="/myprojects" class="active">projects</a></li>
+					<li><a href="/resources">resources</a></li>
+					<li class="right"><a href="/">cli</a></li>
+				</ul>
+			</div>
+
+			<h1 class="title">&gt; projects</h1>
+			<p class="content">
+				<span class="highlight">Projects</span> showcase my work in cloud infrastructure, automation, and DevOps.
+				<br>
+				<br>
+				<span class="highlight">$ curl</span> mfa.sh/projects
+				<br>
+			</p>
+			<br>
+
+			<table id="projects-table" class="shadow">
+				<thead>
+					<tr>
+						<th>TITLE</th>
+						<th>DESCRIPTION</th>
+						<th>LINK</th>
+					</tr>
+				</thead>
+				<tbody id="projects-tbody">
+				</tbody>
+			</table>
+
+			<pre class="footer"><code>
+source: <a href="https://github.com/mohammadzfaisal/myterminalcv">github.com/mohammadzfaisal/myterminalcv</a>
+&copy; mohammad faisal - mfa.sh <script>document.write(new Date().getFullYear())</script>
+			</code></pre>
+		</div>
+		<script>
+			var tbody = document.getElementById('projects-tbody');
+
+			fetch('/data.json')
+				.then(res => res.json())
+				.then(data => {
+					(data.projects || []).filter(function (project) { return project.id !== 'terraform-30'; }).forEach(function (project) {
+						let tr = document.createElement('tr');
+						let td;
+
+						// Title column
+						td = document.createElement('td');
+						td.classList.add('title');
+						td.textContent = project.title;
+						tr.appendChild(td);
+
+						// Description column
+						td = document.createElement('td');
+						td.classList.add('description');
+						let i = 0;
+						let s = '';
+						project.description.split('').forEach(function (c) {
+							switch (c) {
+								case '&': c = '&amp;'; break;
+								case '<': c = '&lt;'; break;
+								case '>': c = '&gt;'; break;
+								case '"': c = '&quot;'; break;
+								case "'": c = '&#39;'; break;
+								case '/': c = '&#47;'; break;
+								case '`':
+									if (i % 2 === 0) {
+										c = '<span class="code">';
+									} else {
+										c = '</span>'
+									}
+									i++;
+									break;
+							}
+							s += c;
+						});
+						td.innerHTML = s;
+						tr.appendChild(td);
+
+						// Link column
+						td = document.createElement('td');
+						td.classList.add('link');
+						let a = document.createElement('a');
+						// Use custom link if provided, otherwise use default view.html format
+						if (project.link) {
+							a.href = project.link;
+							a.textContent = project.link.startsWith('http') ? project.link : 'mfa.sh' + project.link;
+						} else {
+							a.href = '/view.html?post=' + project.id + '&type=projects';
+							a.textContent = 'mfa.sh/projects/' + project.id;
+						}
+						td.appendChild(a);
+						tr.appendChild(td);
+
+						tbody.appendChild(tr);
+					});
+				})
+				.catch(err => {
+					console.error('Error loading projects:', err);
+					tbody.innerHTML = '<tr><td colspan="3" style="color: var(--color2);">Error loading projects data.</td></tr>';
+				});
+		</script>
+	</body>
 </html>
+

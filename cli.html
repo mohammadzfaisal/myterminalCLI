@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Mohammad Faisal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/2.33.2/js/jquery.terminal.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery.terminal/2.33.2/css/jquery.terminal.min.css" rel="stylesheet"/>
+
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .terminal,
+        .terminal-wrapper {
+            height: 100%;
+            width: 100%;
+        }
+
+        body .terminal, 
+        body .terminal-wrapper, 
+        body .cmd, 
+        body .cmd .prompt, 
+        body .cmd .cursor,
+        body .terminal-output div div,
+        body .terminal .table, 
+        body .terminal .row {
+            font-family: 'Fira Code', monospace !important;
+            font-size: 12px !important;
+            line-height: 14px !important;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            --size: 1.2 !important;
+        }
+
+        body .cmd .format, 
+        body .cmd .prompt, 
+        body .cmd .cursor {
+            font-size: 12px !important;
+            line-height: 12px !important;
+        }
+
+        .terminal b, .terminal strong {
+            font-weight: 700 !important;
+        }
+
+        .terminal {
+            text-shadow: 0 0 1px rgba(0, 255, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+<script>
+// --- EMAIL CONFIGURATION (Obfuscated) ---
+var emailUser = "myterminal";     // Your username
+var emailDomain = "faisal.quest";         // Your provider
+var myEmail = emailUser + "@" + emailDomain; 
+// Now 'myEmail' holds the full address, but bots reading the raw file won't see it easily.
+
+var bootComplete = false;
+
+jQuery(document).ready(function($) {
+    var animation = false;
+
+    var help =
+    '\n[[b;white;]System Commands:]\n' +
+    '  [[b;green;]ls]              List profile files (Resume, Projects)\n' +
+    '  [[b;green;]whois]           Basic bio and details\n' +
+    '  [[b;green;]source]          View source code on GitHub\n' +
+    '  [[b;green;]uptime]          Show career length\n' +
+    '  [[b;green;]help]            Show this menu\n' +
+    '\n[[b;white;]Cloud Modules:]\n' +
+    '  [[b;cyan;]k8s]             Check kubernetes cluster status\n' +
+    '  [[b;cyan;]terraform]       View infrastructure plan\n' +
+    '  [[b;cyan;]certifications]  List AWS & Automation certs\n' +
+    '\n[[b;white;]Experience & Content:]\n' +
+    '  [[b;yellow;]work]            Work experience timeline\n' +
+    '  [[b;yellow;]education]       Academic background\n' +
+    '  [[b;yellow;]posts]           Read engineering blog\n' +
+    '  [[b;yellow;]social]          Connect on social media\n' +
+    '  [[b;yellow;]contact]         Send me a message\n' +
+    '  [[b;yellow;]resume]          View animated resume page\n' +
+    '\n[[b;white;]Actions:]\n' +
+    '  [[b;grey;]cat <file>]      Read a file (e.g. cat whois.txt)\n' +
+    '  [[b;grey;]startx]          Switch to graphical GUI mode\n' +
+    '  [[b;grey;]curl]            Fetch data (resume or API)\n' +
+    '  [[b;grey;]sudo]            Run as superuser\n';
+
+     function progressBar(number) {
+        var barLength = Math.round(number / 10);
+        var barFilled = Array(barLength + 1).join("█");
+        var barBlank = Array(11 - barLength).join(" ");
+        return barFilled + barBlank;
+    }
+
+    function padKey(key, length) {
+        return key + ' '.repeat(length - key.length);
+    }
+
+    function forceArray(data) {
+        if (!data) return [];
+        if (Array.isArray(data)) return data;
+        return [data]; 
+    }
+
+    function formatData(item, type) {
+        var output = '---\n';
+        var color = item.color || 'grey';
+        
+        if (type === 'work') {
+            output += '[[b;' + color + ';]' + item.role + ']\n';
+            output += item.company + '\n';
+            output += item.location + '\n';
+            output += item.date + '\n\n';
+            if (item.description) output += item.description + '\r';
+        } 
+        else if (type === 'edu') {
+            output += '[[b;' + color + ';]' + item.degree + ']\n';
+            output += item.school + ' (' + item.date + ')\n';
+            if (item.description) output += item.description + '\r';
+        }
+        else if (type === 'project') {
+            output += '[[b;' + color + ';]' + item.title + ']\n';
+            output += '[[;grey;]' + item.date + ']\n';
+            if (item.link) output += item.link + '\n';
+            if (item.description) output += item.description + '\n';
+            output += '[[;grey;]Type \'cat ' + item.slug + '\' for full details]\r';
+        }
+        return output;
+    }
+
+    var whois = [
+        '[[b;grey;]Name:]\t\t\tMohammad Faisal\n' + 
+        '[[b;grey;]Profession:]\t\tCloud Engineer\n' +
+        '[[b;grey;]Location:]\t\tCalgary, AB\n' +
+        '[[b;grey;]Email:]\t\t\t' + myEmail + '\n' +
+        '[[b;grey;]Homepage:]\t\thttps://ysap.sh\n' +
+        'Passionate about cloud infrastructure and DevOps automation.' +
+        '\r'
+    ];
+
+    function social() { 
+        let sMap = { 
+            'GitHub': 'https://github.com/mohammadzfaisal',
+            'LinkedIn': 'https://linkedin.com/in/mohammadzfaisal',
+            'Twitter': 'https://twitter.com/faisal'
+        };
+        
+        socialText = []
+        for (let key in sMap) {
+            if (sMap.hasOwnProperty(key)) {
+                let longestKeyLength = Math.max(...Object.keys(sMap).map(key => key.length));
+                socialText.push(padKey(key, longestKeyLength) + '\t' + sMap[key])
+            }
+        }
+        return socialText;
+    }
+
+    var work = [
+        '---\n[[b;cyan;]Senior Cloud Engineer]\nTech Corp\nRemote\n2020-Present\n\nLed cloud migration initiatives\r'
+    ];
+
+    var education = [
+        '---\n[[b;green;]Bachelor of Computer Science]\nUniversity XYZ (2018)\nFocus on distributed systems\r'
+    ];
+
+    var projectsRaw = [
+        {
+            title: "Kubernetes Cluster",
+            date: "2026",
+            link: "https://github.com/mohammadzfaisal/cloud-dashboard",
+            description: "Production K8s setup",
+            file: "content/projects/cloud-dashboard.txt",
+            color: "cyan",
+            slug: "k8s-cluster",
+            content: "Full kubernetes cluster configuration with monitoring and auto-scaling."
+        }
+    ];
+    var projects = projectsRaw.map(item => formatData(item, 'project'));
+
+    var blogList = [
+        {
+            title: "Getting Started with Terraform",
+            date: "2024-12-01",
+            slug: "terraform-intro",
+            file: "content/posts/terraform-guide.txt"
+            // content: "A comprehensive guide to infrastructure as code using Terraform."
+        }
+    ];
+
+    var certifications = [
+        '---\n[[b;orange;]AWS Solutions Architect]\n2023\nAmazon Web Services\nProfessional certification\r'
+    ];
+
+    var skills = [
+        '[[b;cyan;]Kubernetes:]\n' + progressBar(90) + '90%\n\r',
+        '[[b;green;]Terraform:]\n' + progressBar(85) + '85%\n\r'
+    ];
+
+    var k8s = [
+        '[[b;cyan;]☸ Kubernetes Dashboard]\n' +
+        '\n[[b;#326ce5;]CLUSTER INFO:]\n  [[;#00d9ff;]●] Context: gke_faisal-cloud_us-central1_prodk8s\n  [[;#00d9ff;]●] Region: us-central1\n\n[[b;#00ff88;]HEALTH STATUS:]\n  [[;#00ff88;]✓] All systems operational\n  [[;#00ff88;]✓] Control Plane: Healthy\n  [[;#00ff88;]✓] Nodes: 3/3 Ready\n\n[[b;yellow;]RESOURCES:]\n  [[;yellow;]⚡] CPU: 67% allocated\n  [[;yellow;]💾] Memory: 4.2GB / 12GB\n'
+    ];
+  
+    var terraform = [
+        '[[b;cyan;]🏗️  Infrastructure Plan]\n' +
+        '\n[[b;#9370db;]TERRAFORM STATUS:]\n  [[;#00d9ff;]●] Workspace: production\n  [[;#00d9ff;]●] Provider: AWS (us-east-1)\n\n[[b;#00ff88;]PLANNED CHANGES:]\n  [[;#00ff88;]+ 12] Resources to add\n  [[;yellow;]~ 3] Resources to change\n  [[;red;]- 0] Resources to destroy\n\n[[b;white;]MODULES:]\n  [[;grey;]→] vpc, compute, database, monitoring\n'
+    ];
+
+    var misc = [];
+
+    var source = '  [[b;white;]GITHUB REPOSITORY:]\n' +
+              '      _ __ ___  _   _ \n' +
+              '     | \'_ ` _ \\| | | |\n' +
+              '     | | | | | | |_| |\n' +
+              '     |_| |_| |_|\\__, |\n' +
+              '                |___/ \n\n' +
+              '  [[;grey;]Branch: main]\n' +
+              '  [[;grey;]Status: Public]\n' +
+              '  [[;grey;]License: MIT]\n';
+
+    function posts(term) {
+        term.echo("\n[[b;white;]Engineering Blog:]\n");
+        if (blogList.length === 0) {
+            term.echo("  [[;grey;]No posts found. (Add markdown files to content/posts/)]");
+        } else {
+            blogList.forEach(function(post) {
+                term.echo('  [[;cyan;]' + post.date + ']  [[b;white;]' + post.title + ']');
+                term.echo('  [[;grey;]Type \'cat ' + post.slug + '\' to read]\n');
+            });
+        }
+        term.echo("\r");
+    }
+
+    $('body').terminal(function(command, term) {
+        var cmdArr = command.split(/[ ]+/); 
+        var useLess = false;
+
+        function echoArray(array) {
+            if (useLess) {
+                term.less(array, {
+                    onExit: function () {
+                        term.set_command('');
+                        term.scroll_to_bottom();
+                    },
+                });
+            } else {
+                for (i = 0; i < array.length; i += 1) {
+                    term.echo(array[i]);
+                }
+            }
+        }
+
+        function progress(percent, width) {
+            var size = Math.round(width*percent/100);
+            var left = '', taken = '', i;
+            for (i=size; i--;) {
+                taken += '=';
+            }
+            if (taken.length > 0) {
+                taken = taken.replace(/=$/, '>');
+            }
+            for (i=width-size; i--;) {
+                left += ' ';
+            }
+            return '[' + taken + left + '] ' + percent + '%';
+        }
+
+        function loading() {
+            var i = 0, size = 30;
+            string = progress(0, size);
+            term.set_prompt(progress);
+            animation = true;
+            
+            (function loop() {
+                string = progress(i++, size);
+                term.set_prompt(string);
+                if (i < 100) {
+                    timer = setTimeout(loop, 10);
+                } else {
+                    term.echo(progress(i, size) + ' [[b;green;]OK]')
+                        .set_prompt('[[;red;]&#91;][[;pink;]user@myterminal][[;red;]&#93;]-[[;red;]&#91;][[;blue;]~/myterminal][[;red;]&#93;][[;orange;]: ]');
+                    animation = false;
+                }
+            })();
+        }
+
+        switch(cmdArr[0]) {
+            case 'help':
+            case '?':
+                term.echo(help);
+                break;
+
+            case 'contact':  // new contact command
+                term.echo("[[b;#8be9fd;]Initiating secure communication channel...]");
+                
+                term.push(function(name) {
+                    term.push(function(email) {
+                        term.push(function(message) {
+                            term.pause();
+                            term.echo("[[;grey;]Sending transmission...]");
+                            
+                            // Formspree AJAX Call
+                            $.ajax({
+                                url: "https://formspree.io/f/xojqanyl", // YOUR ID HERE
+                                method: "POST",
+                                data: { name: name, email: email, message: message },
+                                dataType: "json",
+                                success: function() {
+                                    term.echo("[[b;green;]Success!] I'll be in touch.");
+                                    term.resume();
+                                    term.pop(); term.pop(); term.pop(); 
+                                },
+                                error: function() {
+                                    term.echo("[[b;red;]Failed.] Email me at: " + myEmail);
+                                    term.resume();
+                                    term.pop(); term.pop(); term.pop();
+                                }
+                            });
+                        }, { prompt: "Message: " });
+                    }, { prompt: "Your Email: " });
+                }, { prompt: "Your Name: " });
+                break;
+
+            case 'ls':
+                var arg = cmdArr[1];
+                var isDetailed = (arg === '-al' || arg === '-la' || arg === '-l' || arg === '-a');
+
+                if (isDetailed) {
+                    term.echo("[[b;white;]total 64]");
+                    term.echo("drwxr-xr-x  2 faisal  staff   4096 Dec 21 20:20 [[b;blue;].]");
+                    term.echo("drwxr-xr-x  2 faisal  staff   4096 Dec 21 20:20 [[b;blue;]..]");
+                    term.echo("-rw-r--r--  1 faisal  staff   1024 Dec 21 20:20 [[;orange;]whois.txt]");
+                    term.echo("-rw-r--r--  1 faisal  staff   2048 Dec 21 20:20 [[;orange;]experience.log]");
+                    term.echo("-rw-r--r--  1 faisal  staff   1024 Dec 21 20:20 [[;orange;]education.pdf]");
+                    term.echo("-rw-r--r--  1 faisal  staff   4096 Dec 21 20:20 [[;orange;]projects.md]");
+                    term.echo("-rwxr-xr-x  1 faisal  staff  65536 Dec 21 20:20 [[b;green;]resume.pdf]");
+        
+                    term.echo("\n[[b;green;]Reading system files...]\n");
+
+                    setTimeout(function() {
+                        term.echo("[[b;green;]>>> READING: whois.txt]");
+                        echoArray(whois);
+                        
+                        term.echo("\n[[b;green;]>>> READING: experience.log]");
+                        echoArray(work);
+                        
+                        term.echo("\n[[b;green;]>>> READING: projects.md]");
+                        echoArray(projects);
+
+                        term.echo("\n"); 
+
+                        term.read("Do you want to download the PDF version of my resume? (y/n): ", function(input) {
+                            if (input.toLowerCase() === 'y' || input.toLowerCase() === 'yes') {
+                                term.echo("[[b;yellow;]System:] Initializing secure download...");
+                                loading(); 
+                                
+                                setTimeout(function() {
+                                    const link = document.createElement('a');
+                                    link.href = "/resume.pdf"; 
+                                    link.download = "Mohammad_Faisal_Resume.pdf";
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                    term.echo("[[b;green;]✓ Download successful.]");
+                                }, 2000);
+                            } else {
+                                term.echo("[[;grey;]Download cancelled by user.]");
+                            }
+                        });
+                    }, 1000);
+                } else {
+                    term.echo("[[;orange;]whois.txt]  [[;orange;]experience.log]  [[;orange;]projects.md]  [[b;green;]resume.pdf]");
+                }
+                break;
+
+            case 'whois':
+                echoArray(whois);
+                break;
+
+            case 'social':
+                echoArray(social());
+                break;
+
+            case 'resume':
+                term.echo('[[b;cyan;]Opening animated resume page...]');
+                window.open('/', '_blank');
+                break;
+
+            case 'work':
+                echoArray(work);
+                break;
+
+            case 'education':
+                echoArray(education);
+                break;
+
+            case 'skills':
+                echoArray(skills);
+                break;
+
+            case 'k8s':
+                echoArray(k8s);
+                break;
+
+            case 'terraform':
+                echoArray(terraform);
+                break;
+
+            case 'projects':
+                echoArray(projects);
+                break;
+
+            case 'certifications':
+                echoArray(certifications);
+                break;
+
+            case 'misc':
+                echoArray(misc);
+                break;
+
+            case 'uptime':
+                term.echo("[[b;green;] 14:02:00 up 12 years, 2 months, 1 user, load average: 0.99, 0.95, 0.90]");
+                term.echo("System has been running since [[b;white;]2014] (My Career Start)");
+                break;
+
+            case 'clear':
+                term.clear();
+                break;
+
+            case 'sudo':
+                term.echo("\n[[b;red;]user is not in the sudoers file. This incident will be reported.]\n");
+                break;
+
+            case 'startx':
+                term.echo("HTTP/1.1 200 OK");
+                term.echo("Content-Type: text/html");
+                term.echo("Server: Cloudflare");
+                term.echo("Connecting to remote host...");
+                loading();
+                setTimeout(function(){
+                    window.open("https://mohammadfaisal.pages.dev", "_blank");
+                }, 2000);
+                break;
+
+            case ':(){:|:&};:':
+                term.echo("nice try");
+                break;
+
+            case 'source':
+                term.echo("[[;blue;]Connecting to github.com...]");
+                term.echo("remote: Enumerating objects: 24, done.");
+                term.echo("remote: Counting objects: 100% (24/24), done.");
+                loading(); 
+                setTimeout(function() {
+                    term.echo("\n" + source);
+                    term.echo("\n[[b;yellow;]Action:] Would you like to open the GitHub repo? (y/n)");
+                    term.read("", function(input) {
+                        if (input.toLowerCase() === 'y' || input.toLowerCase() === 'yes') {
+                            term.echo("[[;green;]Opening repository in new tab...]");
+                            window.open("https://github.com/mohammadzfaisal", "_blank");
+                        } else {
+                            term.echo("Staying in terminal.");
+                        }
+                    });
+                }, 2000);
+                break;
+
+            case 'exit':
+                term.echo("Terminating session...");
+                loading();
+                setTimeout(function() {
+                    term.clear();
+                    term.echo("Session terminated. Goodbye!");
+                }, 1000);
+                break;
+
+            case 'version':
+                term.echo("v1.0.0");
+                break;
+
+           case 'cat':
+                if (cmdArr.length < 2) {
+                    term.echo("Usage: cat <filename>");
+                } else {
+                    var filename = cmdArr[1];
+                    
+                    // 1. Check Hardcoded System Files FIRST (Keep existing logic)
+                    if (filename === 'whois.txt') { 
+                        echoArray(whois); 
+                    } 
+                    else if (filename === 'experience.log') { 
+                        echoArray(work); 
+                    } 
+                    else if (filename === 'projects.md') { 
+                        echoArray(projects); 
+                    } 
+                    else if (filename === 'education.txt') { 
+                        echoArray(education); 
+                    } 
+                    else if (filename === 'resume.pdf') { 
+                        term.echo("Binary file. Use 'curl resume' to download."); 
+                    } 
+                    
+                    // 2. Dynamic Content (Posts & Projects)
+                    else {
+                        // Search in both lists
+                        var post = blogList.find(function(p) { return p.slug === filename; });
+                        var project = projectsRaw.find(function(p) { return p.slug === filename; });
+                        var item = post || project;
+
+                        if (item) {
+                            // Print the Header (Title, Date, etc.)
+                            var headerColor = post ? "white" : "green"; // White for blog, Green for projects
+                            term.echo("\n[[b;" + headerColor + ";]" + item.title + "]");
+                            
+                            if (item.date) term.echo("[[;grey;]Date: " + item.date + "]");
+                            if (item.link) term.echo("[[;grey;]Link: " + item.link + "]");
+                            term.echo("---------------------------------------------------");
+
+                            // CHECK: Do we fetch from a file OR read hardcoded content?
+                            if (item.file) {
+                                term.pause(); // Stop user typing while we load
+                                
+                                $.get(item.file, function(data) {
+                                    term.echo(data);
+                                    term.echo("\n"); // Add spacing at bottom
+                                    term.resume();   // Unlock terminal
+                                })
+                                .fail(function() {
+                                    term.echo("[[b;red;]Error:] Could not load file: " + item.file);
+                                    term.resume();
+                                });
+                            } 
+                            else if (item.content) {
+                                // Fallback for old items that still use hardcoded strings
+                                term.echo(item.content + "\n");
+                            }
+                        } else {
+                            term.echo("[[b;red;]Error:] File '" + filename + "' not found.");
+                        }
+                    }
+                }
+                break;
+            case 'curl':
+                term.echo("[[;green;]Connecting to remote host...]");
+                loading(); 
+                setTimeout(function() {
+                    var target = cmdArr[1];
+                    var allowedFiles = {
+                        'resume': 'resume.pdf',
+                        'resume.pdf': 'resume.pdf',
+                        'cv': 'resume.pdf'
+                    };
+
+                    if (allowedFiles[target]) {
+                        var realFile = allowedFiles[target];
+                        term.echo("HTTP 200 OK: Found " + realFile);
+                        term.echo("Downloading " + realFile + "...");
+                        
+                        const link = document.createElement('a');
+                        link.href = "/" + realFile; 
+                        link.download = "Faisal_" + realFile;
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        
+                        term.echo("[[b;green;]✓ Download Complete.]");
+                    } 
+                    else if (target === 'github') {
+                        term.echo("HTTP 301 Moved Permanently: Redirecting to GitHub...");
+                        window.open("https://github.com/mohammadzfaisal", "_blank");
+                    }
+                    else if (target === 'linkedin') {
+                        term.echo("HTTP 301 Moved Permanently: Redirecting to LinkedIn...");
+                        window.open("https://linkedin.com/in/mohammadzfaisal", "_blank");
+                    }
+                    else if (target === 'ysap.sh') {
+                         term.echo("HTTP 301 Moved Permanently: Redirecting to ysap.sh...");
+                         window.open("https://ysap.sh", "_blank");
+                    }
+                    else if (target && target.includes('.')) {
+                        term.echo("[[b;red;]HTTP 403 Forbidden:] Access Denied.");
+                        term.echo("You do not have permission to access '" + target + "' on this server.");
+                    }
+                    else {
+                        $.get('https://v2.jokeapi.dev/joke/Programming?type=single&safe-mode', function(data) {
+                            if(data.joke) {
+                                term.echo('[[b;cyan;]API RESPONSE:] "' + data.joke + '"');
+                            } else {
+                                term.echo("[[;red;]Error: Connection timeout.]");
+                            }
+                        });
+                    }
+                }, 1000); 
+                break;
+
+            case 'posts':
+                posts(term);
+                break;
+
+            case '':
+                break;
+
+            default:
+                term.echo("\nunknown command: " + command);
+                term.echo("please type 'help' or '?' for a list of available commands\n");
+        }
+    }, {
+        greetings: false,
+        onInit: function(term) {
+            if (bootComplete) {
+                term.echo("[[b;cyan;]" + "                 _                      _             _ \n _ __ ___  _   _| |_ ___ _ __ _ __ ___ (_)_ __   __ _| |\n| '_ ` _ \\| | | | __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` | |\n| | | | | | |_| | ||  __/ |  | | | | | | | | | | (_| | |\n|_| |_| |_|\\__, |\\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|_|\n           |___/                                          \n\nWelcome to My Terminal Portfolio\nType 'help' to see available commands\n\n]");
+                return;
+            }
+            
+            bootComplete = true;
+            term.pause(true);
+
+            var generatedIP = "10.0." + (Math.floor(Math.random() * 254) + 1) + "." + (Math.floor(Math.random() * 254) + 1);
+            var bootLines = [
+                "[[;grey;][  0.000000]] Initializing Cloud Resources...",
+                "[[;grey;][  0.240152]] node-01: Provisioning VPC Network (10.0.0.0/16)",
+                "[[;grey;][  0.582103]] node-01: Instance IP: [[b;white;]" + generatedIP + "]",
+                "[[;grey;][  0.892110]] node-01: Attaching IAM Role: TerminalAdmin",
+                "[[b;green;]OK] Cloud Infrastructure Ready",
+                "",
+                "[[;grey;][  0.952110]] Checking Egress Rules...",
+                "[[;grey;]&#91;][[b;#ff6600;]  WARN  ][[;grey;]&#93;] [[;yellow;]Internet Breakout Detected (UDP/443).]",
+                "[[;grey;]&#91;][[b;#00d9ff;]  INFO  ][[;grey;]&#93;] [[;white;]ICMP (Pong) is preferred for connectivity checks.]",
+                "",
+                "[[;grey;][  1.210442]] Initializing CloudOS Kernel 1.4.2 (root@faisal-cloud)",
+                "[[;grey;][  1.450122]] [k8s] Scheduling core-services pods...",
+                "[[;grey;][  1.820331]] [k8s] Pod: api-gateway-v1 ....... [[b;green;]READY]",
+                "[[b;white;]------------------------------------------------------------]",
+                "[[b;white;]CloudOS v1.4.2 (Node: " + generatedIP + ")]",
+                "[[;grey;]Copyright 2025 Mohammad Faisal. MIT License.]",
+                "[[b;white;]------------------------------------------------------------]",
+                "[[b;green;]DONE:] System is live. Terminal interface active."
+            ];
+            
+            var currentLine = 0;
+            
+            function typeLine() {
+                if (currentLine < bootLines.length) {
+                    term.echo(bootLines[currentLine]);
+                    currentLine++;
+                    setTimeout(typeLine, 80);
+                } else {
+                    showLoadingBar();
+                }
+            }
+            
+            function showLoadingBar() {
+                term.echo("\n[[b;white;]Starting Cloud Services...]");
+                term.echo(" ");
+                term.echo("Loading: [          ] 0%");
+                
+                var percent = 0;
+                var interval = setInterval(function() {
+                    percent += 2;
+                    var barColor = (percent < 100) ? "orange" : "green";
+                    var barString = progressBar(percent);
+
+                    term.update(-1, "Loading: [[;" + barColor + ";]" + barString + "] " + percent + "%");
+
+                    if (percent >= 100) {
+                        clearInterval(interval);
+                        setTimeout(function() {
+                            term.clear();
+                            term.echo("[[b;cyan;]                 _                      _             _ \n _ __ ___  _   _| |_ ___ _ __ _ __ ___ (_)_ __   __ _| |\n| '_ ` _ \\| | | | __/ _ \\ '__| '_ ` _ \\| | '_ \\ / _` | |\n| | | | | | |_| | ||  __/ |  | | | | | | | | | | (_| | |\n|_| |_| |_|\\__, |\\__\\___|_|  |_| |_| |_|_|_| |_|\\__,_|_|\n           |___/                                          \n\nWelcome to My Terminal Portfolio\n\nType 'help' to see available commands]");
+                            term.echo("\n");
+                            term.resume();
+                        }, 800);
+                    }
+                }, 40);
+            }
+            
+            typeLine();
+        },
+
+        prompt:'[[;red;]&#91;][[;pink;]user@myterminal][[;red;]&#93;]-[[;red;]&#91;][[;blue;]~/myterminal][[;red;]&#93;][[;orange;]: ]',
+
+        keydown: function(e, term) {
+            if (animation) {
+                if (e.which == 68 && e.ctrlKey) {
+                    clearTimeout(timer);
+                    animation = false;
+                    term.echo(string + ' [[b;red;]FAIL]')
+                    .set_prompt('[[;red;]&#91;][[;pink;]user@myterminal][[;red;]&#93;]-[[;red;]&#91;][[;blue;]~/myterminal][[;red;]&#93;][[;orange;]: ]');
+                }
+                return false;
+            }
+        },
+        autocompleteMenu: true,
+        completion: ['help', 'whois', 'uptime', 'k8s', 'terraform', 'projects', 'ls', 'ls -al', 'social', 'work', 'education', 'skills', 'certifications', 'startx', 'posts', 'sudo', 'clear', 'cat', 'exit','curl']
+    });
+});
+</script>
+</body>
+</html>

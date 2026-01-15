@@ -50,11 +50,6 @@ ul {
 	color: var(--color3);
 }
 
-.terraform-highlight {
-	color: var(--color2);
-	font-style: italic;
-}
-
 .hidden {
 	display: none;
 }
@@ -209,8 +204,9 @@ p.content {
 .footer {
 	text-align: center;
 	font-size: 12px;
-	margin-top: 10px;
-	padding-top: 0;
+	margin-top: 40px;
+	padding-top: 20px;
+	border-top: 1px solid #87ff8755;
 }
 
 /* terminal display */
@@ -225,13 +221,6 @@ pre.terminal {
 
 pre.terminal > code {
 	font-size: 13px;
-	white-space: pre;
-}
-
-pre.terminal,
-pre.terminal > code {
-	font-family: "Cascadia Mono", "Consolas", "Fira Mono", monospace;
-	font-variant-ligatures: none;
 }
 
 /* blinking cursor */
@@ -329,34 +318,26 @@ pre.terminal > code::after {
 	margin: 5px 0;
 }
 
-.terminal-highlight-title {
-	color: var(--color3);
-	font-weight: bold;
+/* ASCII Art enhancements */
+.ascii-logo {
+	text-shadow: 2px 2px 4px rgba(255, 215, 175, 0.3);
 }
 
-.terminal-highlight {
-	color: var(--color2);
+/* Improved spacing for content */
+pre.terminal > code {
+	line-height: 1.5;
 }
 
-.terminal-links {
-	margin: 8px 0 0;
-	text-align: center;
-	font-size: 12px;
+/* Link hover effects */
+a:hover {
+	text-shadow: 0 0 8px var(--color1);
+	transition: text-shadow 0.3s ease;
 }
 
-.terminal-links a {
-	color: var(--color1);
+/* Green text glow enhancement for boxes */
+.box-glow {
+	text-shadow: 0 0 5px rgba(135, 255, 135, 0.3);
 }
-
-.terminal-links-sep {
-	color: var(--color4);
-	margin: 0 6px;
-}
-
-.terminal-links + pre.terminal {
-	margin-top: 8px;
-}
-
 
 /* Responsive layout for mobile */
 @media (max-width: 768px) {
@@ -373,10 +354,10 @@ pre.terminal > code::after {
 		<div id="container">
 			<div id="top-nav">
 				<ul>
-					<li><a href="#home" class="active">home</a></li>
-					<li><a href="/myprojects">projects</a></li>
-					<li><a href="/resources">resources</a></li>
-					<li class="right"><a href="/cli.html">cli</a></li>
+					<li><a href="#about" class="active">about</a></li>
+					<li><a href="#projects">projects</a></li>
+					<li><a href="#legend">usage</a></li>
+					<li class="right"><a href="/">home</a></li>
 				</ul>
 			</div>
 
@@ -387,20 +368,8 @@ pre.terminal > code::after {
 					<br><br>
 					This is my learning log and project hub for cloud engineering. I work through AWS challenges, infrastructure design, automation, and Linux system internals — documenting what works, what breaks, and what I learn along the way.
 					<br><br>
-					<strong>** The <span class="terraform-highlight">Complete Terraform</span> is in progress! **</strong> It's available in the projects section at mfa.sh
+					<span class="highlight"><strong>** The Complete Terraform is in progress! **</strong></span> It's available in the projects section at mfa.sh
 				</p>
-			</div>
-
-			<div class="terminal-links">
-				<a href="/project?id=terraform-30">Project</a>
-				<span class="terminal-links-sep">|</span>
-				<a href="/myblogs">Blog</a>
-				<span class="terminal-links-sep">|</span>
-				<a href="/phasebook">Phasebook</a>
-				<span class="terminal-links-sep">|</span>
-				<a href="/challenge">Challenge</a>
-				<span class="terminal-links-sep">|</span>
-				<a href="https://github.com/mohammadzfaisal/myterminalcv">Source</a>
 			</div>
 
 			<pre class="terminal shadow" id="main-terminal"><code></code></pre>
@@ -411,12 +380,12 @@ source: <a href="https://github.com/mohammadzfaisal/myterminalcv">github.com/moh
 			</code></pre>
 		</div>
 
-		<script>
-/**
- * Terminal Animation (based on ysap.sh)
- * Author: Mohammad Faisal
- * License: MIT
- */
+			'  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">This is my personal terminal </span><span style="color: var(--color3);">│</span>  <span style="color: var(--color3);">│</span> <span style="color: var(--color1);">Projects    mfa.sh/projects  </span><span style="color: var(--color3);">│</span>',
+			'  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">style site where I document  </span><span style="color: var(--color3);">│</span>  <span style="color: var(--color3);">│</span> <span style="color: var(--color1);">Challenge   mfa.sh/challenge </span><span style="color: var(--color3);">│</span>',
+			'  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">cloud engineering projects,  </span><span style="color: var(--color3);">│</span>  <span style="color: var(--color3);">│</span> <span style="color: var(--color1);">Blog        mfa.sh/myblogs   </span><span style="color: var(--color3);">│</span>',
+			'  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">AWS challenges, and system   </span><span style="color: var(--color3);">│</span>  <span style="color: var(--color3);">│</span> <span style="color: var(--color1);">GitHub      mohammadzfaisal  </span><span style="color: var(--color3);">│</span>',
+			'  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">level work.                  </span><span style="color: var(--color3);">│</span>  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">                             </span><span style="color: var(--color3);">│</span>',
+			'  <span class="box-glow" style="color: var(--color3);">└──────────────────────────────┘</span>  <span class="box-glow" style="color: var(--color3);">└──────────────────────────────┘</span>',
 
 // Commands to display in terminal
 const COMMANDS = [
@@ -424,32 +393,26 @@ const COMMANDS = [
 		cmd: 'curl mfa.sh',
 		lines: [
 			'',
-			'  <span style="color: var(--color5);">   ███    ███ ███████  █████  </span>    <span style="color: var(--color1); font-weight: bold;">MFA — Mohammad Faisal</span>',
+			'  <span style="color: var(--color5);">   ███    ███ ███████  █████  </span>     <span style="color: var(--color1); font-weight: bold;">MFA — Mohammad Faisal</span>',
 			'  <span style="color: var(--color5);">   ████  ████ ██      ██   ██</span>     <span style="color: var(--color5);">Cloud engineer building infrastructure with AWS,</span>',
 			'  <span style="color: var(--color5);">   ██ ████ ██ █████   ███████</span>     <span style="color: var(--color5);">Linux, and automation.</span>',
 			'  <span style="color: var(--color5);">   ██  ██  ██ ██      ██   ██</span>     <a href="https://mfa.sh" style="color: var(--color1); text-decoration: none;">https://mfa.sh</a>',
 			'  <span style="color: var(--color5);">   ██      ██ ██      ██   ██</span>',
 			'',
 			'',
-'  <span class="terminal-highlight-title">Highlight</span>',
-'',
-'  <span class="terminal-highlight">Recently migrated 21+ VMs to k8s with zero downtime.</span>',
-			'',
-			'  <span style="color: var(--color3);">┌─ About ──────────────────────┐  ┌─ Links ──────────────────────┐</span>',
-			'  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">This is my personal terminal </span><span style="color: var(--color3);">│  │</span> <span class="terminal-link">Projects    mfa.sh/projects  </span><span style="color: var(--color3);">│</span>',
-			'  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">style site where I document  </span><span style="color: var(--color3);">│  │</span> <span class="terminal-link">Challenge   mfa.sh/challenge </span><span style="color: var(--color3);">│</span>',
-			'  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">cloud engineering projects,  </span><span style="color: var(--color3);">│  │</span> <span class="terminal-link">Blog        mfa.sh/myblogs   </span><span style="color: var(--color3);">│</span>',
-			'  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">AWS challenges, and system   </span><span style="color: var(--color3);">│  │</span> <span class="terminal-link">GitHub      mohammadzfaisal  </span><span style="color: var(--color3);">│</span>',
-			'  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">level work.                  </span><span style="color: var(--color3);">│  │</span> <span class="terminal-link">                             </span><span style="color: var(--color3);">│</span>',
-			'  <span style="color: var(--color3);">└──────────────────────────────┘  └──────────────────────────────┘</span>',
+			'  <span class="box-glow" style="color: var(--color3);">┌─ About ──────────────────────┐  ┌─ Links ──────────────────────┐</span>',
+			'  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">This is my personal terminal</span> <span style="color: var(--color3);">│  │</span> <span style="color: var(--color1);">Projects    mfa.sh/projects   │</span>',
+			'  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">style site where I document</span>  <span style="color: var(--color3);">│  │</span> <span style="color: var(--color1);">Challenge   mfa.sh/challenge  │</span>',
+			'  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">cloud engineering projects,</span>  <span style="color: var(--color3);">│  │</span> <span style="color: var(--color1);">Blog        mfa.sh/myblogs    │</span>',
+			'  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">AWS challenges, and system</span>   <span style="color: var(--color3);">│  │</span> <span style="color: var(--color1);">GitHub      mohammadzfaisal   │</span>',
+			'  <span style="color: var(--color3);">│</span> <span style="color: var(--color5);">level work.</span>                  <span style="color: var(--color3);">│  └──────────────────────────┘</span>',
+			'  <span style="color: var(--color3);">└──────────────────────────────┘</span>',
 			'',
 			'  <span style="color: var(--color5);">Legend</span>',
 			'',
-			'  <span style="color: var(--color3);">$ curl mfa.sh</span>                 <span style="color: #8be9fd;">Get this page</span>',
-			'  <span style="color: var(--color3);">$ curl mfa.sh/challenge</span>       <span style="color: #8be9fd;">Get the view of challenge progress</span>',
-			'  <span style="color: var(--color3);">$ curl mfa.sh/json</span>            <span style="color: #8be9fd;">Get the resume in JSON format</span>',
-			'  <span style="color: var(--color3);">$ curl mfa.sh/help</span>            <span style="color: #8be9fd;">Get the list of available commands</span>',
-			'',
+			'  <span style="color: var(--color3);">$ curl mfa.sh/projects</span>       <span style="color: #8be9fd;">View projects</span>',
+			'  <span style="color: var(--color3);">$ curl mfa.sh/challenge</span>      <span style="color: #8be9fd;">View AWS challenge progress</span>',
+			'  <span style="color: var(--color3);">$ curl mfa.sh/myblogs</span>        <span style="color: #8be9fd;">Read my blog posts</span>',
 			''
 		]
 	}
@@ -476,12 +439,12 @@ function runCommand(i, cb) {
 		command,
 		['\n'],
 		output,
-		'$',
+		'$ ',
 		CURSOR_BLINK_START,
 	);
 
 	blinkCursorStart();
-	terminal.innerHTML = '$';
+	terminal.innerHTML = '$ ';
 
 	let idx = 0;
 	function type() {
@@ -519,7 +482,7 @@ function blinkCursorEnd() {
 }
 
 function main() {
-	terminal.innerHTML = '$';
+	terminal.innerHTML = '$ ';
 	let delay = INITIAL_DELAY;
 
 	function loop() {
@@ -534,4 +497,3 @@ main();
 		</script>
 	</body>
 </html>
-

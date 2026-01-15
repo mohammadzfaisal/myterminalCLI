@@ -1,185 +1,361 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terminal View</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+<!doctype html>
+<html>
+	<head>
+		<title>Terminal View | mfa.sh</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <style>
-        /* 2. DRACULA TERMINAL THEME */
-        :root {
-            --drac-bg: #282a36;
-            --drac-fg: #f8f8f2;
-            --drac-cyan: #8be9fd;
-            --drac-orange: #ffb86c;
-            --drac-green: #50fa7b;
-            --drac-purple: #bd93f9;
-            --drac-comment: #6272a4;
-        }
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
-        body {
-            background-color: var(--drac-bg);
-            color: var(--drac-fg);
-            font-family: 'Fira Code', monospace;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.5;
-        }
+		<style>
+/**
+ * mfa.sh CSS (based on ysap.sh)
+ *
+ * Author: Mohammad Faisal
+ * License: MIT
+ */
 
-        #terminal-container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 20px;
-            border: 1px solid var(--drac-comment);
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            white-space: pre-wrap;
-        }
+/* terminal theme colors */
+:root {
+	--color1: #5fffff;
+	--color2: #ff87af;
+	--color3: #87ff87;
+	--color4: #666;
+	--color5: #ffd7af;
+}
 
-        .back-link {
-            color: var(--drac-comment);
-            text-decoration: none;
-            margin-bottom: 20px;
-            display: inline-block;
-        }
-        .back-link:hover { color: var(--drac-cyan); }
-        .prompt-char { color: var(--drac-green); margin-right: 10px; }
+/* reset */
+* {
+	margin: 0;
+	padding: 0;
+}
 
-        img {
-            max-width: 100%;
-            border: 2px solid var(--drac-comment);
-            border-radius: 4px;
-            margin: 20px 0;
-            filter: brightness(0.9); 
-        }
+ul {
+	list-style-type: none;
+}
 
-        .terminal-header {
-            color: var(--drac-cyan);
-            font-weight: 700;
-            font-size: 1.6em;
-            display: block;
-            margin-bottom: 1.5em;
-            border-bottom: 2px dashed var(--drac-comment);
-            padding-bottom: 15px;
-        }
-        .header-prompt { color: var(--drac-purple); margin-right: 10px;}
+/* helper classes */
+.title {
+	color: var(--color3);
+}
 
-        .term-orange { color: var(--drac-orange); font-weight: bold; }
-        .term-blue { color: var(--drac-cyan); font-weight: bold; }
-        .term-cyan { color: var(--drac-cyan); font-weight: bold; }
-        .term-green { color: var(--drac-green); font-weight: bold; }
-        .term-grey { color: var(--drac-comment); }
-        .term-purple { color: var(--drac-purple); font-weight: bold; }
-    </style>
-</head>
-<body>
+.highlight {
+	color: var(--color3);
+}
 
-    <div id="terminal-container">
-        <a href="javascript:history.back()" class="back-link"><span class="prompt-char">$</span>cd ..</a>
-        <div id="content">
-            <span style="color: var(--drac-cyan)">Loading data..._</span>
-        </div>
-    </div>
+.hidden {
+	display: none;
+}
 
-    <div id="series-nav" style="display:none; margin-top:30px; padding:20px 0; border-top:1px dashed #6272a4; justify-content: space-between; font-family: 'Fira Code', monospace;">
-        <a id="prev-day" href="#">&lt;&lt; Previous</a>
-        <a href="/myblogs/terraform-30.html" style="color:#8be9fd;">[ 30 Day Index ]</a>
-        <a id="next-day" href="#">Next &gt;&gt;</a>
-    </div>
+.shadow {
+	border: 1px solid #87ff8755;
+	box-shadow: 0 0 200px #87ff8734;
+}
 
-    <script>
-        const urlParams = new URLSearchParams(window.location.search);
-        const postSlug = urlParams.get('post');
-        const type = urlParams.get('type') || 'posts'; 
-        const filePath = `/content/${type}/${postSlug}.txt`;
+@media (max-width: 650px) {
+	.hide-mobile {
+		display: none;
+	}
+}
 
-        if(postSlug) {
-            fetch(filePath)
-                .then(response => {
-                    if (!response.ok) throw new Error("File not found");
-                    return response.text();
-                })
-                .then(text => {
-                    const html = parseTerminalToHTML(text);
-                    document.getElementById('content').innerHTML = html;
-                    const displayTitle = postSlug.split('/').pop();
-                    document.title = "./" + displayTitle + " [" + type + "]";
+/* layout and design */
+body {
+	background-color: #000;
+	color: var(--color5);
+	font-size: 13px;
+}
 
-                    if (postSlug.includes('tf-day')) {
-                        setupSeriesNav(postSlug);
-                    }
-                })
-                .catch(err => {
-                    document.getElementById('content').innerHTML = `<span class="term-red">Error 404: File '${filePath}' not found.</span>`;
-                });
-        }
+body, code {
+	font-family: "Fira Mono", monospace;
+	font-weight: 400;
+	font-style: normal;
+}
 
-        function setupSeriesNav(currentSlug) {
-            const dayMatch = currentSlug.match(/tf-day(\d+)/);
-            if (!dayMatch) return;
-            
-            const dayNum = parseInt(dayMatch[1]);
-            const navBar = document.getElementById('series-nav');
-            const folderPrefix = currentSlug.includes('/') ? currentSlug.split('/')[0] + '/' : '';
-            
-            if (navBar) {
-                navBar.style.display = 'flex';
-                
-                const prevBtn = document.getElementById('prev-day');
-                const nextBtn = document.getElementById('next-day');
-                
-                if (dayNum > 0) {
-                    prevBtn.href = `view.html?post=${folderPrefix}tf-day${dayNum - 1}&type=posts`;
-                    prevBtn.style.visibility = 'visible';
-                } else {
-                    prevBtn.style.visibility = 'hidden';
-                }
-                
-                if (dayNum < 30) {
-                    nextBtn.href = `view.html?post=${folderPrefix}tf-day${dayNum + 1}&type=posts`;
-                    nextBtn.style.visibility = 'visible';
-                } else {
-                    nextBtn.style.visibility = 'hidden';
-                }
-            }
-        }
+b, strong, h1, h2, h3, h4, h5, h6 {
+	font-weight: 900;
+}
 
-        function parseTerminalToHTML(text) {
-            // Split text into lines to handle the header separately
-            let lines = text.split('\n');
-            
-            if (lines.length === 0) return "";
+#container {
+	position: relative;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 10px;
+	max-width: 800px;
+	padding: 0 6px;
+}
 
-            // 1. PROCESS HEADER (Line 1)
-            // Get first line, strip any existing terminal formatting to get raw text
-            let rawTitle = lines[0].replace(/\[\[.*?\](.*?)\]/g, '$1');
-            // Wrap it in our cool Dracula header styling with a fake prompt
-            let styledHeader = `<span class="terminal-header"><span class="header-prompt">➜</span>${rawTitle}</span>`;
+a, a:visited {
+	color: var(--color1);
+	text-decoration: none;
+}
 
-            // 2. PROCESS BODY (Remaining lines)
-            let bodyText = lines.slice(1).join('\n');
+#top-nav {
+	text-align: left;
+	border-bottom: 1px solid #87ff8755;
+	margin-bottom: 21px;
+}
 
-            // Handle Images: [[@;;]path/to/img] -> <img src="...">
-            bodyText = bodyText.replace(/\[\[@;;\](.*?)\]/g, '<img src="$1">');
+#top-nav > ul {
+	list-style: none;
+	overflow: hidden;
+}
 
-            // Handle Colors: Map terminal codes to Dracula CSS classes
-            bodyText = bodyText.replace(/\[\[b;orange;\](.*?)\]/g, '<span class="term-orange">$1</span>');
-            bodyText = bodyText.replace(/\[\[b;cyan;\](.*?)\]/g, '<span class="term-cyan">$1</span>');
-            bodyText = bodyText.replace(/\[\[b;blue;\](.*?)\]/g, '<span class="term-blue">$1</span>');
-            bodyText = bodyText.replace(/\[\[b;green;\](.*?)\]/g, '<span class="term-green">$1</span>');
-            bodyText = bodyText.replace(/\[\[b;grey;\](.*?)\]/g, '<span class="term-grey">$1</span>');
-            bodyText = bodyText.replace(/\[\[b;purple;\](.*?)\]/g, '<span class="term-purple">$1</span>');
-            
-            // Cleanup: Remove white/default tags, leave plain text
-            bodyText = bodyText.replace(/\[\[b;white;\](.*?)\]/g, '$1');
-            // Final catch-all to strip broken tags so they don't show raw
-            bodyText = bodyText.replace(/\[\[.*?\](.*?)\]/g, '$1');
+#top-nav > ul > li {
+	float: left;
+}
 
-            // Combine header and body
-            return styledHeader + "\n" + bodyText;
-        }
-    </script>
-</body>
+#top-nav > ul > li.right {
+	float: right;
+}
+
+#top-nav > ul > li > a {
+	display: block;
+	text-align: center;
+	color: var(--color5);
+	padding: 14px 13px;
+	text-decoration: none;
+}
+
+#top-nav > ul > li a:hover {
+	background-color: #333;
+}
+
+#top-nav > ul > li .active {
+	color: var(--color3);
+}
+
+#terminal-container {
+	background-color: #111;
+	padding: 15px;
+	margin-top: 30px;
+	border: 1px solid #87ff8755;
+	box-shadow: 0 0 200px #87ff8734;
+	overflow-x: auto;
+	line-height: 1.6;
+	white-space: pre-wrap;
+}
+
+.back-link {
+	color: var(--color4);
+	text-decoration: none;
+	margin-bottom: 15px;
+	display: inline-block;
+}
+
+.back-link:hover {
+	color: var(--color1);
+}
+
+.prompt-char {
+	color: var(--color3);
+	margin-right: 10px;
+}
+
+img {
+	max-width: 100%;
+	border: 1px solid #87ff8755;
+	margin: 20px 0;
+	filter: brightness(0.9);
+}
+
+.terminal-header {
+	color: var(--color1);
+	font-weight: 900;
+	font-size: 1.4em;
+	display: block;
+	margin-bottom: 1.5em;
+	border-bottom: 1px solid #87ff8755;
+	padding-bottom: 15px;
+}
+
+.header-prompt {
+	color: var(--color3);
+	margin-right: 10px;
+}
+
+.term-orange {
+	color: var(--color5);
+	font-weight: bold;
+}
+
+.term-blue {
+	color: var(--color1);
+	font-weight: bold;
+}
+
+.term-cyan {
+	color: var(--color1);
+	font-weight: bold;
+}
+
+.term-green {
+	color: var(--color3);
+	font-weight: bold;
+}
+
+.term-grey {
+	color: var(--color4);
+}
+
+.term-purple {
+	color: var(--color2);
+	font-weight: bold;
+}
+
+.term-red {
+	color: var(--color2);
+	font-weight: bold;
+}
+
+.footer {
+	text-align: center;
+	font-size: 12px;
+	margin-top: 10px;
+	padding-top: 0;
+}
+
+#series-nav {
+	display: none;
+	margin-top: 30px;
+	padding: 20px 0;
+	border-top: 1px dashed #87ff8755;
+	justify-content: space-between;
+	font-family: "Fira Mono", monospace;
+}
+
+#series-nav a {
+	color: var(--color1);
+}
+
+#series-nav a:hover {
+	color: var(--color3);
+}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<div id="top-nav">
+				<ul>
+					<li><a href="/resume.html">home</a></li>
+					<li><a href="/myprojects">projects</a></li>
+					<li><a href="/resources">resources</a></li>
+					<li class="right"><a href="/">cli</a></li>
+				</ul>
+			</div>
+
+			<div id="terminal-container">
+				<a href="javascript:history.back()" class="back-link"><span class="prompt-char">$</span>cd ..</a>
+				<div id="content">
+					<span style="color: var(--color1)">Loading data..._</span>
+				</div>
+			</div>
+
+			<div id="series-nav">
+				<a id="prev-day" href="#">&lt;&lt; Previous</a>
+				<a href="/myblogs/terraform-30.html">[ 30 Day Index ]</a>
+				<a id="next-day" href="#">Next &gt;&gt;</a>
+			</div>
+
+			<pre class="footer"><code>
+source: <a href="https://github.com/mohammadzfaisal/myterminalcv">github.com/mohammadzfaisal/myterminalcv</a>
+&copy; mohammad faisal - mfa.sh <script>document.write(new Date().getFullYear())</script>
+			</code></pre>
+		</div>
+
+		<script>
+			const urlParams = new URLSearchParams(window.location.search);
+			const postSlug = urlParams.get('post');
+			const type = urlParams.get('type') || 'posts'; 
+			const filePath = `/content/${type}/${postSlug}.txt`;
+
+			if(postSlug) {
+				fetch(filePath)
+					.then(response => {
+						if (!response.ok) throw new Error("File not found");
+						return response.text();
+					})
+					.then(text => {
+						const html = parseTerminalToHTML(text);
+						document.getElementById('content').innerHTML = html;
+						const displayTitle = postSlug.split('/').pop();
+						document.title = "./" + displayTitle + " [" + type + "] | mfa.sh";
+
+						if (postSlug.includes('tf-day')) {
+							setupSeriesNav(postSlug);
+						}
+					})
+					.catch(err => {
+						document.getElementById('content').innerHTML = `<span class="term-red">Error 404: File '${filePath}' not found.</span>`;
+					});
+			}
+
+			function setupSeriesNav(currentSlug) {
+				const dayMatch = currentSlug.match(/tf-day(\d+)/);
+				if (!dayMatch) return;
+				
+				const dayNum = parseInt(dayMatch[1]);
+				const navBar = document.getElementById('series-nav');
+				const folderPrefix = currentSlug.includes('/') ? currentSlug.split('/')[0] + '/' : '';
+				
+				if (navBar) {
+					navBar.style.display = 'flex';
+					
+					const prevBtn = document.getElementById('prev-day');
+					const nextBtn = document.getElementById('next-day');
+					
+					if (dayNum > 0) {
+						prevBtn.href = `view.html?post=${folderPrefix}tf-day${String(dayNum - 1).padStart(2, '0')}&type=posts`;
+						prevBtn.style.visibility = 'visible';
+					} else {
+						prevBtn.style.visibility = 'hidden';
+					}
+					
+					if (dayNum < 30) {
+						nextBtn.href = `view.html?post=${folderPrefix}tf-day${String(dayNum + 1).padStart(2, '0')}&type=posts`;
+						nextBtn.style.visibility = 'visible';
+					} else {
+						nextBtn.style.visibility = 'hidden';
+					}
+				}
+			}
+
+			function parseTerminalToHTML(text) {
+				// Split text into lines to handle the header separately
+				let lines = text.split('\n');
+				
+				if (lines.length === 0) return "";
+
+				// 1. PROCESS HEADER (Line 1)
+				// Get first line, strip any existing terminal formatting to get raw text
+				let rawTitle = lines[0].replace(/\[\[.*?\](.*?)\]/g, '$1');
+				// Wrap it in our terminal header styling with a prompt
+				let styledHeader = `<span class="terminal-header"><span class="header-prompt">&gt;</span>${rawTitle}</span>`;
+
+				// 2. PROCESS BODY (Remaining lines)
+				let bodyText = lines.slice(1).join('\n');
+
+				// Handle Images: [[@;;]path/to/img] -> <img src="...">
+				bodyText = bodyText.replace(/\[\[@;;\](.*?)\]/g, '<img src="$1">');
+
+				// Handle Colors: Map terminal codes to terminal theme CSS classes
+				bodyText = bodyText.replace(/\[\[b;orange;\](.*?)\]/g, '<span class="term-orange">$1</span>');
+				bodyText = bodyText.replace(/\[\[b;cyan;\](.*?)\]/g, '<span class="term-cyan">$1</span>');
+				bodyText = bodyText.replace(/\[\[b;blue;\](.*?)\]/g, '<span class="term-blue">$1</span>');
+				bodyText = bodyText.replace(/\[\[b;green;\](.*?)\]/g, '<span class="term-green">$1</span>');
+				bodyText = bodyText.replace(/\[\[b;grey;\](.*?)\]/g, '<span class="term-grey">$1</span>');
+				bodyText = bodyText.replace(/\[\[b;purple;\](.*?)\]/g, '<span class="term-purple">$1</span>');
+				bodyText = bodyText.replace(/\[\[b;red;\](.*?)\]/g, '<span class="term-red">$1</span>');
+				
+				// Cleanup: Remove white/default tags, leave plain text
+				bodyText = bodyText.replace(/\[\[b;white;\](.*?)\]/g, '$1');
+				// Final catch-all to strip broken tags so they don't show raw
+				bodyText = bodyText.replace(/\[\[.*?\](.*?)\]/g, '$1');
+
+				// Combine header and body
+				return styledHeader + "\n" + bodyText;
+			}
+		</script>
+	</body>
 </html>

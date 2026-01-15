@@ -17,8 +17,19 @@
         { "name": "Terraform", "color": "#7b42bc" },
         { "name": "K8s", "color": "#8be9fd" }
       ]
+    },
+    {
+      "id": "terraform-30",
+      "title": "30 Days of Terraform",
+      "description": "A daily deep-dive into Infrastructure as Code. Follow my progress through 30 structured labs and state management exercises.",
+      "badges": [
+        { "name": "Terraform", "color": "#7b42bc" },
+        { "name": "Live", "color": "#50fa7b" }
+      ],
+      "link": "/myblogs/terraform-30.html"
     }
   ],
+  
   "blogs": [
     {
       "id": "terraform-guide",
@@ -61,5 +72,28 @@
     { "day": "29", "title": "ADVANCED TOOLS", "status": "locked" },
     { "day": "30", "title": "FINAL PROJECT", "status": "locked" }
     
+  ],
+  "resources": [
+    {
+      "id": "terraform-30",
+      "title": "Complete Terraform 30-Day Challenge",
+      "description": "A comprehensive 30-day journey through Terraform fundamentals, advanced patterns, and best practices.",
+      "category": "course",
+      "link": "/challenge"
+    },
+    {
+      "id": "terraform-guide",
+      "title": "Terraform Guide",
+      "description": "Getting started with infrastructure as code using Terraform.",
+      "category": "guide",
+      "link": "/myblogs/terraform-guide"
+    },
+    {
+      "id": "aws-fundamentals",
+      "title": "AWS Fundamentals",
+      "description": "Essential AWS concepts and services for cloud engineers.",
+      "category": "guide",
+      "link": "/myblogs/aws"
+    }
   ]
 }

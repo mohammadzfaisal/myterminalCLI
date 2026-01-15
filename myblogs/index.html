@@ -6,40 +6,103 @@
     <title>Blog - Mohammad Faisal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --drac-bg: #282a36;
-            --drac-fg: #f8f8f2;
-            --drac-cyan: #8be9fd;
-            --drac-green: #50fa7b;
-            --drac-purple: #bd93f9;
-            --drac-comment: #6272a4;
-            --drac-orange: #ffb86c;
+            --color1: #5fffff;
+            --color2: #ff87af;
+            --color3: #87ff87;
+            --color4: #666;
+            --color5: #ffd7af;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            background-color: var(--drac-bg);
-            color: var(--drac-fg);
-            font-family: 'Fira Code', monospace;
+            background-color: #000;
+            color: var(--color5);
+            font-family: "Fira Mono", monospace;
+            font-size: 13px;
             margin: 0;
-            padding: 40px 20px;
+            padding: 0;
         }
 
-        .container { max-width: 850px; margin: 0 auto; }
+        #container {
+            position: relative;
+            margin-right: auto;
+            margin-left: auto;
+            margin-top: 10px;
+            max-width: 850px;
+            padding: 0 6px 40px;
+        }
 
-        .header { border-bottom: 2px solid var(--drac-comment); padding-bottom: 20px; margin-bottom: 40px; }
-        .back-btn { color: var(--drac-cyan); text-decoration: none; font-size: 0.9em; }
+        a, a:visited {
+            color: var(--color1);
+            text-decoration: none;
+        }
 
-        /* BLOG LIST LAYOUT */
-        .blog-list { display: flex; flex-direction: column; gap: 20px; }
+        .title {
+            color: var(--color3);
+        }
 
-        /* BLOG CARD DESIGN */
+        .content {
+            max-width: 620px;
+            line-height: 1.6;
+            margin-top: 10px;
+        }
+
+        #top-nav {
+            text-align: left;
+            border-bottom: 1px solid #87ff8755;
+            margin-bottom: 21px;
+        }
+
+        #top-nav > ul {
+            list-style: none;
+            overflow: hidden;
+        }
+
+        #top-nav > ul > li {
+            float: left;
+        }
+
+        #top-nav > ul > li.right {
+            float: right;
+        }
+
+        #top-nav > ul > li > a {
+            display: block;
+            text-align: center;
+            color: var(--color5);
+            padding: 14px 13px;
+            text-decoration: none;
+        }
+
+        #top-nav > ul > li a:hover {
+            background-color: #333;
+        }
+
+        #top-nav > ul > li .active {
+            color: var(--color3);
+        }
+
+        .header {
+            margin-bottom: 25px;
+        }
+
+        .blog-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
         .blog-card {
-            background: #343746;
-            border: 1px solid var(--drac-comment);
-            border-radius: 8px;
-            padding: 25px;
+            background: #111;
+            border: 1px solid #333;
+            padding: 20px;
             text-decoration: none;
             color: inherit;
             transition: all 0.2s ease;
@@ -47,57 +110,75 @@
         }
 
         .blog-card:hover {
-            border-color: var(--drac-orange);
-            transform: translateX(10px);
-            background: #3d4154;
+            border-color: var(--color1);
+            transform: translateX(8px);
+            background: #151515;
         }
 
         .date-label {
-            color: var(--drac-orange);
+            color: var(--color2);
             font-size: 0.85em;
             margin-bottom: 8px;
             display: block;
         }
 
-        .blog-card h2 { margin: 0 0 10px 0; font-size: 1.4em; color: var(--drac-fg); }
-        .blog-card p { margin: 0; font-size: 0.95em; color: #bdc3c7; line-height: 1.6; }
+        .blog-card h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.4em;
+            color: var(--color5);
+        }
+
+        .blog-card p {
+            margin: 0;
+            font-size: 0.95em;
+            color: #c9c0a0;
+            line-height: 1.6;
+        }
 
         .reading-time {
             margin-top: 15px;
             font-size: 0.8em;
-            color: var(--drac-comment);
+            color: var(--color4);
             font-style: italic;
-        }
-
-        .series-badge {
-            background: var(--drac-green);
-            color: var(--drac-bg);
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-size: 0.7em;
-            font-weight: bold;
-            margin-left: 10px;
-            vertical-align: middle;
         }
 
         .footer-note {
             margin-top: 50px;
             text-align: center;
             font-size: 0.8em;
-            color: var(--drac-comment);
+            color: var(--color4);
+        }
+
+        @media (max-width: 650px) {
+            #top-nav > ul > li {
+                float: none;
+            }
+
+            #top-nav > ul > li.right {
+                float: none;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div id="container">
+        <div id="top-nav">
+            <ul>
+                <li><a href="/resume.html">home</a></li>
+                <li><a href="/myprojects">projects</a></li>
+                <li><a href="/resources">resources</a></li>
+                <li class="right"><a href="/">cli</a></li>
+            </ul>
+        </div>
+
         <div class="header">
-            <a href="/" class="back-btn">$ cd ..</a>
-            <h1 style="color: var(--drac-orange);">/blogs</h1>
+            <h1 class="title">&gt; blogs</h1>
+            <p class="content">Recent logs and notes from the cloud engineering desk.</p>
         </div>
 
         <div id="blog-list" class="blog-list">
-            <p style="color: var(--drac-cyan)">Fetching logs...</p>
+            <p style="color: var(--color1)">Fetching logs...</p>
         </div>
 
         <div class="footer-note">
@@ -107,42 +188,24 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // Fetch the central data file
             fetch('/data.json')
                 .then(response => {
                     if (!response.ok) throw new Error("Could not find data.json");
                     return response.json();
                 })
                 .then(data => {
-                    renderBlogs(data.blogs, data.terraform_challenge);
+                    renderBlogs(data.blogs);
                 })
                 .catch(err => {
-                    document.getElementById('blog-list').innerHTML = 
-                        `<p style="color: #ff5555">Error: Check console for path details.</p>`;
+                    document.getElementById('blog-list').innerHTML =
+                        `<p style="color: var(--color2)">Error: Check console for path details.</p>`;
                     console.error(err);
                 });
 
-            function renderBlogs(blogs, challenge) {
+            function renderBlogs(blogs) {
                 const listContainer = document.getElementById('blog-list');
-                listContainer.innerHTML = ''; // Clear loading text
+                listContainer.innerHTML = '';
 
-                // 1. First, calculate Terraform progress for the special card
-                const completed = challenge.filter(d => d.status === 'completed').length;
-                const total = challenge.length;
-                const progressText = `${completed}/${total} Days Complete`;
-
-                // 2. Add the special Terraform Series Card
-                const tfCard = `
-                    <a href="/myblogs/terraform-30.html" class="blog-card" style="border-left: 5px solid var(--drac-green);">
-                        <span class="date-label">SERIES // ACTIVE CHALLENGE <span class="series-badge">${progressText}</span></span>
-                        <h2>30 Days of Terraform</h2>
-                        <p>A daily deep-dive into Infrastructure as Code. Follow my progress through 30 structured labs and state management exercises.</p>
-                        <div class="reading-time">Click to view progress grid_</div>
-                    </a>
-                `;
-                listContainer.innerHTML += tfCard;
-
-                // 3. Add regular blog posts from JSON
                 blogs.forEach(post => {
                     const postHTML = `
                         <a href="/view.html?post=${post.id}&type=posts" class="blog-card">
@@ -154,6 +217,10 @@
                     `;
                     listContainer.innerHTML += postHTML;
                 });
+
+                if (!blogs || blogs.length === 0) {
+                    listContainer.innerHTML = '<p class="content">No posts yet. Check back soon.</p>';
+                }
             }
         });
     </script>

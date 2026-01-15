@@ -2,4 +2,4 @@ Cloud Infrastructure Dashboard
 [[b;orange;]Status: Operational]
 
 This project visualizes real-time AWS metrics using Grafana and Prometheus.
-[[@;;]content/images/discord.png]
+[[@;;]content/images/]

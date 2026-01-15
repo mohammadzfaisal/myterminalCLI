@@ -1,0 +1,123 @@
+backend:
+  name: github
+  repo: mohammadzfaisal/mohammadzfaisal.github.io
+  branch: main
+  base_url: https://decapcms.org
+  auth_endpoint: /api/v1/auth
+
+site_url: https://mfa.sh
+
+media_folder: content/images
+public_folder: /content/images
+
+collections:
+  - name: pages_root
+    label: Pages (Root)
+    files:
+      - name: home
+        label: Home (index.html)
+        file: index.html
+        format: raw
+        fields:
+          - { label: Body, name: body, widget: text }
+      - name: cli
+        label: CLI (cli.html)
+        file: cli.html
+        format: raw
+        fields:
+          - { label: Body, name: body, widget: text }
+      - name: resume
+        label: Resume (resume.html)
+        file: resume.html
+        format: raw
+        fields:
+          - { label: Body, name: body, widget: text }
+      - name: view
+        label: View (view.html)
+        file: view.html
+        format: raw
+        fields:
+          - { label: Body, name: body, widget: text }
+
+  - name: pages_blogs
+    label: Pages (Blogs)
+    folder: myblogs
+    create: true
+    extension: html
+    format: raw
+    fields:
+      - { label: Body, name: body, widget: text }
+
+  - name: pages_projects
+    label: Pages (Projects)
+    folder: myprojects
+    create: true
+    extension: html
+    format: raw
+    fields:
+      - { label: Body, name: body, widget: text }
+
+  - name: pages_resources
+    label: Pages (Resources)
+    folder: resources
+    create: true
+    extension: html
+    format: raw
+    fields:
+      - { label: Body, name: body, widget: text }
+
+  - name: pages_project
+    label: Pages (Project)
+    folder: project
+    create: true
+    extension: html
+    format: raw
+    fields:
+      - { label: Body, name: body, widget: text }
+
+  - name: pages_challenge
+    label: Pages (Challenge)
+    folder: challenge
+    create: true
+    extension: html
+    format: raw
+    fields:
+      - { label: Body, name: body, widget: text }
+
+  - name: pages_phasebook
+    label: Pages (Phasebook)
+    folder: phasebook
+    create: true
+    extension: html
+    format: raw
+    fields:
+      - { label: Body, name: body, widget: text }
+
+  - name: data
+    label: Data
+    files:
+      - name: site_data
+        label: data.json
+        file: data.json
+        format: raw
+        fields:
+          - { label: Body, name: body, widget: text }
+
+  - name: content_posts
+    label: Content Posts
+    folder: content/posts
+    create: true
+    nested: true
+    extension: txt
+    format: raw
+    fields:
+      - { label: Body, name: body, widget: text }
+
+  - name: content_projects
+    label: Content Projects
+    folder: content/projects
+    create: true
+    extension: txt
+    format: raw
+    fields:
+      - { label: Body, name: body, widget: text }

@@ -1,190 +1,222 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>30 Days of Terraform - Mohammad Faisal</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --drac-bg: #282a36;
-            --drac-fg: #f8f8f2;
-            --drac-cyan: #8be9fd;
-            --drac-green: #50fa7b;
-            --drac-comment: #6272a4;
-            --drac-orange: #ffb86c;
-        }
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>30 Days of Terraform | mfa.sh</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+	<link href="/static/css/challenge-list.css" rel="stylesheet">
+	<style>
+/* terminal theme colors */
+:root {
+	--color1: #5fffff;
+	--color2: #ff87af;
+	--color3: #87ff87;
+	--color4: #666;
+	--color5: #ffd7af;
+}
 
-        body {
-            background-color: var(--drac-bg);
-            color: var(--drac-fg);
-            font-family: 'Fira Code', monospace;
-            padding: 40px 20px;
-            text-align: center;
-        }
+/* reset */
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
 
-        .container { max-width: 900px; margin: 0 auto; }
-        
-        .header { margin-bottom: 30px; border-bottom: 1px solid var(--drac-comment); padding-bottom: 20px;}
-        .back-link { color: var(--drac-cyan); text-decoration: none; float: left; }
+body {
+	background-color: #000;
+	color: var(--color5);
+	font-size: 13px;
+}
 
-        /* PROGRESS SECTION */
-        .progress-section { margin-bottom: 30px; }
-        .progress-bar-bg { background: var(--drac-comment); height: 12px; border-radius: 6px; overflow: hidden; }
-        .progress-fill { 
-            background: var(--drac-green); 
-            height: 100%; 
-            width: 0%; 
-            transition: width 0.8s ease-in-out; 
-        }
+body, input {
+	font-family: "Fira Mono", monospace;
+	font-weight: 400;
+	font-style: normal;
+}
 
-        /* SEARCH BOX */
-        .search-container { margin-bottom: 30px; }
-        #day-search {
-            width: 100%;
-            padding: 12px 20px;
-            border-radius: 4px;
-            border: 1px solid var(--drac-comment);
-            background: #343746;
-            color: var(--drac-fg);
-            font-family: 'Fira Code', monospace;
-            outline: none;
-            box-sizing: border-box;
-        }
-        #day-search:focus { border-color: var(--drac-cyan); }
+a, a:visited {
+	color: var(--color1);
+	text-decoration: none;
+}
 
-        /* THE GRID */
-        .challenge-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
+#container {
+	position: relative;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 10px;
+	max-width: 900px;
+	padding: 0 6px;
+}
 
-        /* DYNAMIC CARD STYLING */
-        .day-card {
-            background: #343746;
-            border: 1px solid var(--drac-comment);
-            border-radius: 4px;
-            padding: 20px 10px;
-            text-decoration: none;
-            color: var(--drac-fg);
-            transition: all 0.2s;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+#top-nav {
+	text-align: left;
+	border-bottom: 1px solid #87ff8755;
+	margin-bottom: 21px;
+}
 
-        .day-card:hover:not(.locked) {
-            border-color: var(--drac-green);
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(80, 250, 123, 0.2);
-        }
+#top-nav > ul {
+	list-style: none;
+	overflow: hidden;
+}
 
-        .completed { border-left: 4px solid var(--drac-green); opacity: 1; }
-        .completed .day-num { color: var(--drac-green); }
+#top-nav > ul > li {
+	float: left;
+}
 
-        .locked {
-            opacity: 0.4;
-            cursor: not-allowed;
-            filter: grayscale(1);
-        }
+#top-nav > ul > li.right {
+	float: right;
+}
 
-        .day-num { font-size: 1.5em; font-weight: bold; margin-bottom: 5px; }
-        .day-label { font-size: 0.7em; color: var(--drac-cyan); text-transform: uppercase; text-align: center; line-height: 1.2;}
-    </style>
+#top-nav > ul > li > a {
+	display: block;
+	text-align: center;
+	color: var(--color5);
+	padding: 14px 13px;
+	text-decoration: none;
+}
+
+#top-nav > ul > li a:hover {
+	background-color: #333;
+}
+
+#terminal-container {
+	background-color: #111;
+	padding: 15px;
+	margin-top: 30px;
+	border: 1px solid #87ff8755;
+	box-shadow: 0 0 200px #87ff8734;
+}
+
+.back-link {
+	color: var(--color4);
+	text-decoration: none;
+	margin-bottom: 15px;
+	display: inline-block;
+}
+
+.back-link:hover {
+	color: var(--color1);
+}
+
+.prompt-char {
+	color: var(--color3);
+	margin-right: 10px;
+}
+
+.terminal-header {
+	color: var(--color1);
+	font-weight: 700;
+	font-size: 1.4em;
+	display: block;
+	margin-bottom: 8px;
+	border-bottom: 1px solid #87ff8755;
+	padding-bottom: 10px;
+}
+
+.header-prompt {
+	color: var(--color3);
+	margin-right: 10px;
+}
+
+.term-grey {
+	color: var(--color4);
+}
+
+/* progress section */
+.progress-section {
+	margin-top: 18px;
+}
+
+.progress-meta {
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.9em;
+	margin-bottom: 10px;
+	color: var(--color5);
+}
+
+.progress-bar-bg {
+	background: #1b1b1b;
+	height: 10px;
+	border: 1px solid #87ff8755;
+	overflow: hidden;
+}
+
+.progress-fill {
+	background: var(--color3);
+	height: 100%;
+	width: 0%;
+	transition: width 0.8s ease-in-out;
+}
+
+/* search */
+.search-container {
+	margin-top: 20px;
+}
+
+#day-search {
+	width: 100%;
+	padding: 10px 12px;
+	border: 1px solid #87ff8755;
+	background: #0c0c0c;
+	color: var(--color5);
+	outline: none;
+}
+
+#day-search:focus {
+	border-color: var(--color1);
+}
+
+	</style>
 </head>
 <body>
+	<div id="container">
+		<div id="top-nav">
+			<ul>
+				<li><a href="/resume.html">home</a></li>
+				<li><a href="/myprojects">projects</a></li>
+				<li><a href="/resources">resources</a></li>
+				<li class="right"><a href="/">cli</a></li>
+			</ul>
+		</div>
 
-    <div class="container">
-        <div class="header">
-            <a href="/myblogs/" class="back-link">$ cd ..</a>
-            <h1 style="color: var(--drac-orange);">30_DAYS_OF_TERRAFORM.exe</h1>
-            <p style="color: var(--drac-comment);">Tracking progress from Init to Destroy</p>
-        </div>
+		<div id="terminal-container">
+			<a href="/myblogs/" class="back-link"><span class="prompt-char">$</span>cd ..</a>
+			<span class="terminal-header"><span class="header-prompt">&gt;</span>30_DAYS_OF_TERRAFORM.exe</span>
+			<div class="term-grey">Tracking progress from Init to Destroy</div>
 
-        <div class="progress-section">
-            <div style="display: flex; justify-content: space-between; font-size: 0.9em; margin-bottom: 10px;">
-                <span>Progress: <span id="progress-percent">0</span>%</span>
-                <span id="progress-stat">0/30 Days</span>
-            </div>
-            <div class="progress-bar-bg">
-                <div id="progress-fill" class="progress-fill"></div>
-            </div>
-        </div>
+			<div class="progress-section">
+				<div class="progress-meta">
+					<span>Progress: <span id="progress-percent">0</span>%</span>
+					<span id="progress-stat">0/30 Days</span>
+				</div>
+				<div class="progress-bar-bg">
+					<div id="progress-fill" class="progress-fill"></div>
+				</div>
+			</div>
 
-        <div class="search-container">
-            <input type="text" id="day-search" placeholder="Search topics (e.g. Variables, Providers)...">
-        </div>
+			<div class="search-container">
+				<input type="text" id="day-search" placeholder="Search topics (e.g. Variables, Providers)...">
+			</div>
 
-        <div id="challenge-grid" class="challenge-grid">
-            </div>
-    </div>
+			<div
+				id="challenge-grid"
+				class="challenge-grid"
+				data-challenge-list
+				data-source="/data.json"
+				data-key="terraform_challenge"
+				data-post-prefix="terraform-30/tf-day"
+				data-post-type="posts"
+				data-search="#day-search"
+				data-progress-fill="#progress-fill"
+				data-progress-percent="#progress-percent"
+				data-progress-stat="#progress-stat"></div>
+		</div>
+	</div>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            let allDays = []; // Memory storage for search filtering
-
-            // Fetch the external JSON file
-            fetch('/data.json')
-                .then(response => {
-                    if (!response.ok) throw new Error("Check if data.json exists in root");
-                    return response.json();
-                })
-                .then(data => {
-                    allDays = data.terraform_challenge;
-                    renderCards(allDays);
-                    updateProgress(allDays);
-                })
-                .catch(err => {
-                    console.error(err);
-                    document.getElementById('challenge-grid').innerHTML = 
-                        `<p style="color:#ff5555">Error: Could not load data.json. Ensure it's in the root folder.</p>`;
-                });
-
-            // Search Input Event Listener
-            document.getElementById('day-search').addEventListener('input', (e) => {
-                const searchTerm = e.target.value.toLowerCase();
-                const filteredDays = allDays.filter(item => 
-                    item.title.toLowerCase().includes(searchTerm) || 
-                    item.day.includes(searchTerm)
-                );
-                renderCards(filteredDays);
-            });
-
-            function renderCards(daysToRender) {
-                const grid = document.getElementById('challenge-grid');
-                grid.innerHTML = daysToRender.map(item => {
-                    const isLocked = item.status === 'locked';
-                    // Link uses the tf-dayXX format from your JSON
-                    const url = isLocked ? "javascript:void(0)" : `/view.html?post=terraform-30/tf-day${item.day}&type=posts`;
-                    
-                    return `
-                        <a href="${url}" class="day-card ${item.status}">
-                            <span class="day-num">${item.day}</span>
-                            <span class="day-label">${isLocked ? 'LOCKED' : item.title}</span>
-                        </a>
-                    `;
-                }).join('');
-            }
-
-            function updateProgress(challengeData) {
-                const totalDays = challengeData.length;
-                const completedDays = challengeData.filter(day => day.status === 'completed').length;
-                const percentage = Math.round((completedDays / totalDays) * 100);
-
-                // Update UI elements
-                document.getElementById('progress-fill').style.width = percentage + "%";
-                document.getElementById('progress-percent').innerText = percentage;
-                document.getElementById('progress-stat').innerText = `${completedDays}/${totalDays} Days`;
-
-                // Theme color change at 100%
-                if (percentage === 100) {
-                    document.getElementById('progress-fill').style.background = "var(--drac-cyan)";
-                }
-            }
-        });
-    </script>
+	<script src="/static/js/challenge-list.js"></script>
 </body>
 </html>

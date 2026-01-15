@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Phasebook | Mohammad Faisal</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta name="description" content="AWS Cloud Engineering roadmap - Mohammad Faisal">
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+		<style>
+:root {
+	--color1: #5fffff;
+	--color2: #ff87af;
+	--color3: #87ff87;
+	--color4: #666;
+	--color5: #ffd7af;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background-color: #000;
+	color: var(--color5);
+	font-size: 13px;
+}
+
+body, code {
+	font-family: "Fira Mono", monospace;
+	font-weight: 400;
+	font-style: normal;
+}
+
+b, strong, h1, h2, h3, h4, h5, h6 {
+	font-weight: 900;
+}
+
+#container {
+	position: relative;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 10px;
+	max-width: 800px;
+	padding: 0 6px;
+}
+
+a, a:visited {
+	color: var(--color1);
+	text-decoration: none;
+}
+
+.title {
+	color: var(--color3);
+}
+
+.content {
+	max-width: 620px;
+	line-height: 1.6;
+	margin-top: 10px;
+}
+
+.shadow {
+	border: 1px solid #87ff8755;
+	box-shadow: 0 0 200px #87ff8734;
+}
+
+#top-nav {
+	text-align: left;
+	border-bottom: 1px solid #87ff8755;
+	margin-bottom: 21px;
+}
+
+#top-nav > ul {
+	list-style: none;
+	overflow: hidden;
+}
+
+#top-nav > ul > li {
+	float: left;
+}
+
+#top-nav > ul > li.right {
+	float: right;
+}
+
+#top-nav > ul > li > a {
+	display: block;
+	text-align: center;
+	color: var(--color5);
+	padding: 14px 13px;
+	text-decoration: none;
+}
+
+#top-nav > ul > li a:hover {
+	background-color: #333;
+}
+
+#top-nav > ul > li .active {
+	color: var(--color3);
+}
+
+.terminal-section {
+	margin: 12px 0;
+	border: 1px solid #333;
+	padding: 10px;
+	background: #0b0b0b;
+}
+
+.terminal-section-title {
+	color: var(--color3);
+	margin-bottom: 10px;
+	padding-bottom: 6px;
+	border-bottom: 1px solid #333;
+}
+
+.phase {
+	padding: 6px 0;
+	border-bottom: 1px dashed #333;
+}
+
+.phase:last-child {
+	border-bottom: none;
+}
+
+.phase-title {
+	color: var(--color1);
+}
+
+.phase-meta {
+	color: var(--color4);
+	font-size: 12px;
+}
+
+.footer {
+	text-align: center;
+	font-size: 12px;
+	margin-top: 10px;
+	padding-top: 0;
+}
+
+@media (max-width: 650px) {
+	#top-nav > ul > li {
+		float: none;
+	}
+
+	#top-nav > ul > li.right {
+		float: none;
+	}
+}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<div id="top-nav">
+				<ul>
+					<li><a href="/resume.html">home</a></li>
+					<li><a href="/myprojects">projects</a></li>
+					<li><a href="/resources">resources</a></li>
+					<li class="right"><a href="/">cli</a></li>
+				</ul>
+			</div>
+
+			<div>
+				<h1 class="title">&gt; phasebook</h1>
+				<p class="content">AWS Cloud Engineering roadmap with phases 0 through 5. Edit this page to update the plan anytime.</p>
+			</div>
+
+			<div class="terminal-section shadow">
+				<div class="terminal-section-title">Learning Path</div>
+
+				<div class="phase">
+					<div class="phase-title">Phase 0: Starting from zero</div>
+					<div class="phase-meta">Topics: What is Linux, What is Networking, What is Programming, What is Cloud Computing, What is DevOps, What is a Cloud Engineer.</div>
+				</div>
+				<div class="phase">
+					<div class="phase-title">Phase 1: Linux and Bash</div>
+					<div class="phase-meta">Topics: Version Control, Cloud CLI, Infrastructure as Code, SSH, CLI Basics, CTF Lab.</div>
+				</div>
+				<div class="phase">
+					<div class="phase-title">Phase 2: Programming &amp; AI Integration</div>
+					<div class="phase-meta">Topics: Python, APIs, FastAPI, Databases, GenAI APIs, Prompt Engineering, Build the App.</div>
+				</div>
+				<div class="phase">
+					<div class="phase-title">Phase 3: Cloud Platform Fundamentals</div>
+					<div class="phase-meta">Topics: Virtual Machines &amp; Compute, Security &amp; IAM, Cloud Networking, Secure Remote Access, Database Deployment, FastAPI Deployment, Capstone Project.</div>
+				</div>
+				<div class="phase">
+					<div class="phase-title">Phase 4: DevOps Fundamentals</div>
+					<div class="phase-meta">Topics: Containers, CI/CD, Infrastructure as Code, Container Orchestration, Monitoring &amp; Observability, Capstone Project.</div>
+				</div>
+				<div class="phase">
+					<div class="phase-title">Phase 5: Securing Your Cloud Applications</div>
+					<div class="phase-meta">Topics: Identity and Access Management, Data Protection &amp; Secrets, Network Security, Security Monitoring, Threat Detection &amp; Response, Capstone Project.</div>
+				</div>
+			</div>
+
+			<pre class="footer"><code>
+source: <a href="https://github.com/mohammadzfaisal/myterminalcv">github.com/mohammadzfaisal/myterminalcv</a>
+&copy; mohammad faisal - mfa.sh <script>document.write(new Date().getFullYear())</script>
+			</code></pre>
+		</div>
+	</body>
+</html>
