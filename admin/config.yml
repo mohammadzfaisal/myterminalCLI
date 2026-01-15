@@ -1,10 +1,11 @@
 backend:
   name: github
-  repo: mohammadzfaisal/mohammadzfaisal.github.io
+  repo: mohammadzfaisal/myterminalCLI
   branch: main
-  auth_endpoint: https://decapcms.org/.netlify/functions/auth
+  base_url: https://decapcms.org
+  auth_endpoint: /api/v1/auth
 
-site_url: https://mfa.sh
+site_url: https://mfa.pages.dev
 
 media_folder: content/images
 public_folder: /content/images
@@ -106,8 +107,7 @@ collections:
     label: Content Posts
     folder: content/posts
     create: true
-    nested:
-      depth: 2
+    nested: true
     extension: txt
     format: raw
     fields:
