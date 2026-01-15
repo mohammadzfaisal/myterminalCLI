@@ -2,8 +2,7 @@ backend:
   name: github
   repo: mohammadzfaisal/mohammadzfaisal.github.io
   branch: main
-  base_url: https://decapcms.org
-  auth_endpoint: /api/v1/auth
+  auth_endpoint: https://decapcms.org/.netlify/functions/auth
 
 site_url: https://mfa.sh
 
