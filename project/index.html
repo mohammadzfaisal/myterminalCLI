@@ -301,7 +301,7 @@ if (!projectId) {
 					return response.text();
 				})
 				.then((text) => {
-					if (!text) {
+					if (!text || isHtmlDocument(text)) {
 						return;
 					}
 					const parsed = parseFrontMatter(text);
@@ -334,6 +334,11 @@ function parseFrontMatter(text) {
 	return {
 		body: lines.slice(bodyStart).join('\n').replace(/^\n+/, '')
 	};
+}
+
+function isHtmlDocument(text) {
+	const sample = String(text || '').trim().slice(0, 200).toLowerCase();
+	return sample.startsWith('<!doctype html') || sample.startsWith('<html');
 }
 		</script>
 	</body>
