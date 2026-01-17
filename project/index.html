@@ -293,7 +293,7 @@ if (!projectId) {
 
 			renderProject(project);
 
-			fetch(`/content/projects/${projectId}.txt`)
+			fetch(`/content/projects/${projectId}.md`)
 				.then((response) => {
 					if (!response.ok) {
 						return null;
@@ -304,9 +304,10 @@ if (!projectId) {
 					if (!text) {
 						return;
 					}
+					const parsed = parseFrontMatter(text);
 					const block = document.getElementById('project-content-block');
 					const content = document.getElementById('project-content');
-					content.textContent = text;
+					content.textContent = parsed.body || text;
 					block.classList.remove('hidden');
 				});
 		})
@@ -314,6 +315,25 @@ if (!projectId) {
 			console.error(error);
 			setError('Unable to load project data.');
 		});
+}
+
+function parseFrontMatter(text) {
+	const normalized = String(text || '').replace(/\r\n/g, '\n');
+	const lines = normalized.split('\n');
+	let bodyStart = 0;
+
+	if (lines[0] && lines[0].trim() === '---') {
+		for (let i = 1; i < lines.length; i += 1) {
+			if (lines[i].trim() === '---') {
+				bodyStart = i + 1;
+				break;
+			}
+		}
+	}
+
+	return {
+		body: lines.slice(bodyStart).join('\n').replace(/^\n+/, '')
+	};
 }
 		</script>
 	</body>

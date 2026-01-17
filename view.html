@@ -238,7 +238,7 @@ img {
 		<div id="container">
 			<div id="top-nav">
 				<ul>
-					<li><a href="/resume.html">home</a></li>
+					<li><a href="/">home</a></li>
 					<li><a href="/myprojects">projects</a></li>
 					<li><a href="/resources">resources</a></li>
 					<li class="right"><a href="/">cli</a></li>
@@ -268,7 +268,7 @@ source: <a href="https://github.com/mohammadzfaisal/myterminalcv">github.com/moh
 			const urlParams = new URLSearchParams(window.location.search);
 			const postSlug = urlParams.get('post');
 			const type = urlParams.get('type') || 'posts'; 
-			const filePath = `/content/${type}/${postSlug}.txt`;
+			const filePath = `/content/${type}/${postSlug}.md`;
 
 			if(postSlug) {
 				fetch(filePath)
@@ -277,9 +277,10 @@ source: <a href="https://github.com/mohammadzfaisal/myterminalcv">github.com/moh
 						return response.text();
 					})
 					.then(text => {
-						const html = parseTerminalToHTML(text);
+						const parsed = parseFrontMatter(text);
+						const displayTitle = parsed.meta.title || postSlug.split('/').pop();
+						const html = parseTerminalToHTML(parsed.body, displayTitle);
 						document.getElementById('content').innerHTML = html;
-						const displayTitle = postSlug.split('/').pop();
 						document.title = "./" + displayTitle + " [" + type + "] | mfa.sh";
 
 						if (postSlug.includes('tf-day')) {
@@ -321,20 +322,45 @@ source: <a href="https://github.com/mohammadzfaisal/myterminalcv">github.com/moh
 				}
 			}
 
-			function parseTerminalToHTML(text) {
+			function parseFrontMatter(text) {
+				const normalized = String(text || '').replace(/\r\n/g, '\n');
+				const lines = normalized.split('\n');
+				const meta = {};
+				let bodyStart = 0;
+
+				if (lines[0] && lines[0].trim() === '---') {
+					for (let i = 1; i < lines.length; i += 1) {
+						if (lines[i].trim() === '---') {
+							bodyStart = i + 1;
+							break;
+						}
+						const match = lines[i].match(/^([A-Za-z0-9_-]+)\s*:\s*(.*)$/);
+						if (match) {
+							meta[match[1]] = match[2].replace(/^['"]|['"]$/g, '');
+						}
+					}
+				}
+
+				return {
+					meta,
+					body: lines.slice(bodyStart).join('\n').replace(/^\n+/, '')
+				};
+			}
+
+			function parseTerminalToHTML(text, title) {
 				// Split text into lines to handle the header separately
 				let lines = text.split('\n');
 				
 				if (lines.length === 0) return "";
 
 				// 1. PROCESS HEADER (Line 1)
-				// Get first line, strip any existing terminal formatting to get raw text
-				let rawTitle = lines[0].replace(/\[\[.*?\](.*?)\]/g, '$1');
+				// Get header text, strip any existing terminal formatting to get raw text
+				let rawTitle = title || lines[0].replace(/\[\[.*?\](.*?)\]/g, '$1');
 				// Wrap it in our terminal header styling with a prompt
 				let styledHeader = `<span class="terminal-header"><span class="header-prompt">&gt;</span>${rawTitle}</span>`;
 
 				// 2. PROCESS BODY (Remaining lines)
-				let bodyText = lines.slice(1).join('\n');
+				let bodyText = title ? lines.join('\n') : lines.slice(1).join('\n');
 
 				// Handle Images: [[@;;]path/to/img] -> <img src="...">
 				bodyText = bodyText.replace(/\[\[@;;\](.*?)\]/g, '<img src="$1">');

@@ -2,7 +2,7 @@ backend:
   name: github
   repo: mohammadzfaisal/myterminalCLI
   branch: main
-  base_url: https://decapcms.org
+  base_url: https://myterminalcli.netlify.app
   auth_endpoint: /.netlify/functions/auth
 
 site_url: https://mfaisal.pages.dev
@@ -23,12 +23,6 @@ collections:
       - name: cli
         label: CLI (cli.html)
         file: cli.html
-        format: raw
-        fields:
-          - { label: Body, name: body, widget: text }
-      - name: resume
-        label: Resume (resume.html)
-        file: resume.html
         format: raw
         fields:
           - { label: Body, name: body, widget: text }
