@@ -291,13 +291,13 @@ source: <a href="https://github.com/mohammadzfaisal/myterminalcv">github.com/moh
 						td = document.createElement('td');
 						td.classList.add('link');
 						let a = document.createElement('a');
-						// Use custom link if provided, otherwise use default view.html format
+						// Use custom link if provided, otherwise link to project detail page
 						if (project.link) {
 							a.href = project.link;
 							a.textContent = project.link.startsWith('http') ? project.link : 'mfa.sh' + project.link;
 						} else {
-							a.href = '/view.html?post=' + project.id + '&type=projects';
-							a.textContent = 'mfa.sh/projects/' + project.id;
+							a.href = '/project/?id=' + project.id;
+							a.textContent = 'mfa.sh/project/?id=' + project.id;
 						}
 						td.appendChild(a);
 						tr.appendChild(td);
