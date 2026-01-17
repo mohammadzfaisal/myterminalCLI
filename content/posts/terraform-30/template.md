@@ -1,4 +1,7 @@
 ---
+title: "Terraform Challenge Template"
+day: "00"
+status: locked
 ---
 
 ➜ Terraform_Challenge: Day [DAY] - [TITLE]
