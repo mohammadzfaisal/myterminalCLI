@@ -217,11 +217,11 @@
       "link": "/myblogs/terraform-guide"
     },
     {
-      "id": "aws-fundamentals",
-      "title": "AWS Fundamentals",
-      "description": "Essential AWS concepts and services for cloud engineers.",
+      "id": "learn-cloud",
+      "title": "Learn to cloud",
+      "description": "The guide to becoming a cloud engineer.",
       "category": "guide",
-      "link": "/myblogs/aws"
+      "link": "https://learntocloud.guide"
     }
   ]
 }

@@ -564,7 +564,30 @@ jQuery(document).ready(function($) {
                         'cv': 'resume.pdf'
                     };
 
-                    if (allowedFiles[target]) {
+                    if (target && /^https?:\/\//.test(target)) {
+                        try {
+                            target = target.replace(/^https?:\/\//, '');
+                        } catch (err) {
+                        }
+                    }
+
+                    if (target === 'mfa.sh' || target === 'mfa.sh/' || target === '/') {
+                        term.echo("HTTP 200 OK: mfa.sh");
+                        window.open('/', '_blank');
+                    }
+                    else if (target === 'mfa.sh/challenge' || target === 'mfa.sh/challenge/' || target === '/challenge') {
+                        term.echo("HTTP 200 OK: mfa.sh/challenge");
+                        window.open('/challenge', '_blank');
+                    }
+                    else if (target === 'mfa.sh/help' || target === 'mfa.sh/help/' || target === '/help') {
+                        term.echo("HTTP 200 OK: mfa.sh/help");
+                        term.echo(help);
+                    }
+                    else if (target === 'mfa.sh/json' || target === 'mfa.sh/json/' || target === '/json') {
+                        term.echo("HTTP 200 OK: mfa.sh/json");
+                        window.open('/resume.json', '_blank');
+                    }
+                    else if (allowedFiles[target]) {
                         var realFile = allowedFiles[target];
                         term.echo("HTTP 200 OK: Found " + realFile);
                         term.echo("Downloading " + realFile + "...");

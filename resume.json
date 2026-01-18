@@ -1,0 +1,64 @@
+{
+  "basics": {
+    "name": "Mohammad Faisal",
+    "label": "Cloud Engineer",
+    "summary": "Cloud engineer focused on AWS, automation, and infrastructure as code.",
+    "email": "you@example.com",
+    "phone": "+000-000-0000",
+    "website": "https://mfa.sh",
+    "location": {
+      "city": "",
+      "region": "",
+      "country": ""
+    },
+    "profiles": [
+      {
+        "network": "GitHub",
+        "username": "mohammadzfaisal",
+        "url": "https://github.com/mohammadzfaisal"
+      },
+      {
+        "network": "LinkedIn",
+        "username": "mohammadzfaisal",
+        "url": "https://linkedin.com/in/mohammadzfaisal"
+      }
+    ]
+  },
+  "experience": [
+    {
+      "company": "Example Company",
+      "position": "Cloud Engineer",
+      "startDate": "2024-01",
+      "endDate": "Present",
+      "highlights": [
+        "Designed and automated cloud infrastructure using Terraform.",
+        "Improved deployment reliability with CI/CD workflows."
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "30 Days of Terraform",
+      "description": "Daily Infrastructure as Code challenges and labs.",
+      "url": "https://mfa.sh/myblogs/terraform-30.html"
+    }
+  ],
+  "skills": [
+    {
+      "name": "AWS",
+      "keywords": ["EC2", "VPC", "IAM", "S3"]
+    },
+    {
+      "name": "Infrastructure as Code",
+      "keywords": ["Terraform"]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Example University",
+      "area": "Computer Science",
+      "studyType": "BSc",
+      "endDate": "2023"
+    }
+  ]
+}
