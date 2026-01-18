@@ -323,7 +323,9 @@ source: <a href="https://github.com/mohammadzfaisal/myterminalcv">github.com/moh
 			}
 
 			function parseFrontMatter(text) {
-				const normalized = String(text || '').replace(/\r\n/g, '\n');
+				const normalized = String(text || '')
+					.replace(/^\uFEFF/, '')
+					.replace(/\r\n/g, '\n');
 				const lines = normalized.split('\n');
 				const meta = {};
 				let bodyStart = 0;

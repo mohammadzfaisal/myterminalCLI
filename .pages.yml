@@ -21,9 +21,15 @@ content:
       - name: description
         label: Description
         type: text
+      - name: draft
+        label: Draft
+        type: boolean
       - name: body
         label: Body
         type: text
+    exclude:
+      - terraform-30/readme.md
+      - terraform-30/template.md
 
   - name: challenge_content
     label: Challenge Content (content/posts/terraform-30)
@@ -50,9 +56,15 @@ content:
               label: Locked
             - value: active
               label: Active
+      - name: draft
+        label: Draft
+        type: boolean
       - name: body
         label: Body
         type: text
+    exclude:
+      - readme.md
+      - template.md
 
   - name: project_content
     label: Project Content (content/projects)
@@ -66,6 +78,9 @@ content:
       - name: description
         label: Description
         type: text
+      - name: draft
+        label: Draft
+        type: boolean
       - name: link
         label: Link
         type: string

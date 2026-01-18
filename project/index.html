@@ -307,7 +307,8 @@ if (!projectId) {
 					const parsed = parseFrontMatter(text);
 					const block = document.getElementById('project-content-block');
 					const content = document.getElementById('project-content');
-					content.textContent = parsed.body || text;
+					const bodyText = parsed.body || text;
+					content.innerHTML = renderMarkdown(bodyText);
 					block.classList.remove('hidden');
 				});
 		})
@@ -339,6 +340,70 @@ function parseFrontMatter(text) {
 function isHtmlDocument(text) {
 	const sample = String(text || '').trim().slice(0, 200).toLowerCase();
 	return sample.startsWith('<!doctype html') || sample.startsWith('<html');
+}
+
+function escapeHtml(value) {
+	return String(value || '')
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
+}
+
+function renderInlineMarkdown(text) {
+	let escaped = escapeHtml(text);
+	escaped = escaped.replace(/`([^`]+)`/g, '<code>$1</code>');
+	escaped = escaped.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+	escaped = escaped.replace(/\*([^*]+)\*/g, '<em>$1</em>');
+	escaped = escaped.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+	return escaped;
+}
+
+function renderMarkdown(text) {
+	const lines = String(text || '').replace(/\r\n/g, '\n').split('\n');
+	let html = '';
+	let inList = false;
+
+	function closeList() {
+		if (inList) {
+			html += '</ul>';
+			inList = false;
+		}
+	}
+
+	for (let i = 0; i < lines.length; i += 1) {
+		const line = lines[i];
+		if (!line.trim()) {
+			closeList();
+			html += '\n';
+			continue;
+		}
+
+		const headingMatch = line.match(/^(#{1,6})\s+(.*)$/);
+		if (headingMatch) {
+			closeList();
+			const level = headingMatch[1].length;
+			html += `<h${level}>${renderInlineMarkdown(headingMatch[2])}</h${level}>`;
+			continue;
+		}
+
+		const listMatch = line.match(/^\s*[-*]\s+(.*)$/);
+		if (listMatch) {
+			if (!inList) {
+				html += '<ul>';
+				inList = true;
+			}
+			html += `<li>${renderInlineMarkdown(listMatch[1])}</li>`;
+			continue;
+		}
+
+		closeList();
+		html += `<p>${renderInlineMarkdown(line)}</p>`;
+	}
+
+	closeList();
+	return html;
 }
 		</script>
 	</body>

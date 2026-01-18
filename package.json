@@ -1,0 +1,8 @@
+{
+  "name": "myterminalcv",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "sync": "node scripts/run_sync.js"
+  }
+}

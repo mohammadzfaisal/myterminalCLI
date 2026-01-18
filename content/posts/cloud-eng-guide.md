@@ -1,6 +1,7 @@
 ---
+id: "cloud-eng-guide"
 title: Starting the Cloud Engineering Journey
-date: 2025-01-01
+date: 2026-01-01
 category: General
 description: "It's Not Just About the Command Line: 4 Surprising Lessons from a Modern Tech Curriculum."
 ---

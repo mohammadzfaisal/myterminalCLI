@@ -1,77 +1,205 @@
 {
   "projects": [
     {
-      "id": "multi-region-vpc",
-      "title": "Multi-Region VPC Peering",
-      "description": "Automated global infrastructure rollout using Terraform and GitHub Actions.",
-      "badges": [
-        { "name": "AWS", "color": "#ff9900" },
-        { "name": "Live", "color": "#50fa7b" }
-      ]
-    },
-    {
       "id": "cloud-dashboard",
       "title": "EKS Cluster Automation",
       "description": "Provisioning production-ready EKS clusters with monitoring and logging enabled.",
       "badges": [
-        { "name": "Terraform", "color": "#7b42bc" },
-        { "name": "K8s", "color": "#8be9fd" }
+        {
+          "name": "Terraform",
+          "color": "#7b42bc"
+        },
+        {
+          "name": "K8s",
+          "color": "#8be9fd"
+        }
       ]
     },
     {
       "id": "terraform-30",
       "title": "30 Days of Terraform",
-      "description": "A daily deep-dive into Infrastructure as Code. Follow my progress through 30 structured labs and state management exercises.",
-      "badges": [
-        { "name": "Terraform", "color": "#7b42bc" },
-        { "name": "Live", "color": "#50fa7b" }
-      ],
-      "link": "/myblogs/terraform-30.html"
+      "description": "A daily deep-dive into Infrastructure as Code. Follow my progress through 30 structured labs and state management exercises."
     }
   ],
-  
   "blogs": [
+    {
+      "id": "markdown_vscode",
+      "title": "Markdown in VSCODE",
+      "date": "2026-01-17",
+      "category": "Guide",
+      "description": "Markdown is a lightweight markup language for creating formatted text using a plain-text editor."
+    },
     {
       "id": "cloud-eng-guide",
       "title": "Starting the Cloud Engineering Journey",
-      "date": "2025-01-01",
+      "date": "2026-01-01",
       "category": "General",
       "description": "It's Not Just About the Command Line: 4 Surprising Lessons from a Modern Tech Curriculum."
+    },
+    {
+      "id": "aws",
+      "title": "AWS Fundamentals",
+      "date": "2025-01-01",
+      "category": "Guide",
+      "description": "Essential AWS concepts and services for cloud engineers."
     }
   ],
   "terraform_challenge": [
-    { "day": "00", "title": "WHY I AM DOING IT?", "status": "completed" },
-    { "day": "01", "title": "THE SETUP", "status": "In Progress" },
-    { "day": "02", "title": "PROVIDERS", "status": "locked" },
-    { "day": "03", "title": "VARIABLES", "status": "locked" },
-    { "day": "04", "title": "LOCKED", "status": "locked" },
-    { "day": "05", "title": "DATA SOURCES", "status": "active" },
-    { "day": "06", "title": "OUTPUTS", "status": "locked" },
-    { "day": "07", "title": "STATE MANAGEMENT", "status": "locked" },
-    { "day": "08", "title": "REMOTE BACKENDS", "status": "locked" },
-    { "day": "09", "title": "PROVISIONERS", "status": "locked" },
-    { "day": "10", "title": "MODULES PART 1", "status": "locked" },
-    { "day": "11", "title": "MODULES PART 2", "status": "locked" },
-    { "day": "12", "title": "WORKSPACES", "status": "locked" },
-    { "day": "13", "title": "COUNT & FOR_EACH", "status": "locked" },
-    { "day": "14", "title": "DYNAMIC BLOCKS", "status": "locked" },
-    { "day": "15", "title": "BUILT-IN FUNCTIONS", "status": "locked" },
-    { "day": "16", "title": "DEPENDENCIES", "status": "locked" },
-    { "day": "17", "title": "LIFECYCLE RULES", "status": "locked" },
-    { "day": "18", "title": "SENSITIVE DATA", "status": "locked" },
-    { "day": "19", "title": "TERRAFORM CLOUD", "status": "locked" },
-    { "day": "20", "title": "IMPORTING INFRA", "status": "locked" },
-    { "day": "21", "title": "DRY PRINCIPLES", "status": "locked" },
-    { "day": "22", "title": "TESTING IAC", "status": "locked" },
-    { "day": "23", "title": "SECURITY SCANNING", "status": "locked" },
-    { "day": "24", "title": "DRIFT DETECTION", "status": "locked" },
-    { "day": "25", "title": "CI/CD PIPELINES", "status": "locked" },
-    { "day": "26", "title": "COMPLEX TYPES", "status": "locked" },
-    { "day": "27", "title": "BEST PRACTICES", "status": "locked" },
-    { "day": "28", "title": "DEBUGGING", "status": "locked" },
-    { "day": "29", "title": "ADVANCED TOOLS", "status": "locked" },
-    { "day": "30", "title": "FINAL PROJECT", "status": "locked" }
-    
+    {
+      "day": "00",
+      "title": "WHY I AM DOING IT?",
+      "status": "completed"
+    },
+    {
+      "day": "01",
+      "title": "THE SETUP",
+      "status": "In Progress"
+    },
+    {
+      "day": "02",
+      "title": "PROVIDERS",
+      "status": "locked"
+    },
+    {
+      "day": "03",
+      "title": "VARIABLES",
+      "status": "locked"
+    },
+    {
+      "day": "04",
+      "title": "LOCKED",
+      "status": "locked"
+    },
+    {
+      "day": "05",
+      "title": "DATA SOURCES",
+      "status": "active"
+    },
+    {
+      "day": "06",
+      "title": "OUTPUTS",
+      "status": "locked"
+    },
+    {
+      "day": "07",
+      "title": "STATE MANAGEMENT",
+      "status": "locked"
+    },
+    {
+      "day": "08",
+      "title": "REMOTE BACKENDS",
+      "status": "locked"
+    },
+    {
+      "day": "09",
+      "title": "PROVISIONERS",
+      "status": "locked"
+    },
+    {
+      "day": "10",
+      "title": "MODULES PART 1",
+      "status": "locked"
+    },
+    {
+      "day": "11",
+      "title": "MODULES PART 2",
+      "status": "locked"
+    },
+    {
+      "day": "12",
+      "title": "WORKSPACES",
+      "status": "locked"
+    },
+    {
+      "day": "13",
+      "title": "COUNT & FOR_EACH",
+      "status": "locked"
+    },
+    {
+      "day": "14",
+      "title": "DYNAMIC BLOCKS",
+      "status": "locked"
+    },
+    {
+      "day": "15",
+      "title": "BUILT-IN FUNCTIONS",
+      "status": "locked"
+    },
+    {
+      "day": "16",
+      "title": "DEPENDENCIES",
+      "status": "locked"
+    },
+    {
+      "day": "17",
+      "title": "LIFECYCLE RULES",
+      "status": "locked"
+    },
+    {
+      "day": "18",
+      "title": "SENSITIVE DATA",
+      "status": "locked"
+    },
+    {
+      "day": "19",
+      "title": "TERRAFORM CLOUD",
+      "status": "locked"
+    },
+    {
+      "day": "20",
+      "title": "IMPORTING INFRA",
+      "status": "locked"
+    },
+    {
+      "day": "21",
+      "title": "DRY PRINCIPLES",
+      "status": "locked"
+    },
+    {
+      "day": "22",
+      "title": "TESTING IAC",
+      "status": "locked"
+    },
+    {
+      "day": "23",
+      "title": "SECURITY SCANNING",
+      "status": "locked"
+    },
+    {
+      "day": "24",
+      "title": "DRIFT DETECTION",
+      "status": "locked"
+    },
+    {
+      "day": "25",
+      "title": "CI/CD PIPELINES",
+      "status": "locked"
+    },
+    {
+      "day": "26",
+      "title": "COMPLEX TYPES",
+      "status": "locked"
+    },
+    {
+      "day": "27",
+      "title": "BEST PRACTICES",
+      "status": "locked"
+    },
+    {
+      "day": "28",
+      "title": "DEBUGGING",
+      "status": "locked"
+    },
+    {
+      "day": "29",
+      "title": "ADVANCED TOOLS",
+      "status": "locked"
+    },
+    {
+      "day": "30",
+      "title": "FINAL PROJECT",
+      "status": "locked"
+    }
   ],
   "resources": [
     {
