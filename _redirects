@@ -1,2 +1,2 @@
 /resources /resources/index.html 200
-/resources/* /resources/index.html 200
+/resources/ /resources/index.html 200
