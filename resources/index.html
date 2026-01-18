@@ -1,0 +1,301 @@
+<!doctype html>
+<html>
+	<head>
+		<title>resources | mfa.sh</title>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+		<style>
+/**
+ * mfa.sh CSS (based on ysap.sh)
+ *
+ * Author: Mohammad Faisal
+ * License: MIT
+ */
+
+/* terminal theme colors */
+:root {
+	--color1: #5fffff;
+	--color2: #ff87af;
+	--color3: #87ff87;
+	--color4: #666;
+	--color5: #ffd7af;
+}
+
+/* reset */
+* {
+	margin: 0;
+	padding: 0;
+}
+
+ul {
+	list-style-type: none;
+}
+
+/* helper classes */
+.center {
+	text-align: center;
+}
+
+.title {
+	color: var(--color3);
+}
+
+.highlight {
+	color: var(--color3);
+}
+
+.hidden {
+	display: none;
+}
+
+.shadow {
+	border: 1px solid #87ff8755;
+	box-shadow: 0 0 200px #87ff8734;
+}
+
+@media (max-width: 650px) {
+	.hide-mobile {
+		display: none;
+	}
+}
+
+/* layout and design */
+body {
+	background-color: #000;
+	color: var(--color5);
+	font-size: 13px;
+}
+
+body, code {
+	font-family: "Fira Mono", monospace;
+	font-weight: 400;
+	font-style: normal;
+}
+
+b, strong, h1, h2, h3, h4, h5, h6 {
+	font-weight: 900;
+}
+
+#container {
+	position: relative;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: 10px;
+	max-width: 800px;
+	padding: 0 6px;
+}
+
+a, a:visited {
+	color: var(--color1);
+	text-decoration: none;
+}
+
+h1.title {
+	margin-bottom: 21px;
+}
+
+h2.title {
+	margin-top: 30px;
+	margin-bottom: 10px;
+}
+
+#top-nav {
+	text-align: left;
+	border-bottom: 1px solid #87ff8755;
+	margin-bottom: 21px;
+}
+
+#top-nav > ul {
+	list-style: none;
+	overflow: hidden;
+}
+
+#top-nav > ul > li {
+	float: left;
+}
+
+#top-nav > ul > li.right {
+	float: right;
+}
+
+#top-nav > ul > li > a {
+	display: block;
+	text-align: center;
+	color: var(--color5);
+	padding: 14px 13px;
+	text-decoration: none;
+}
+
+#top-nav > ul > li a:hover {
+	background-color: #333;
+}
+
+#top-nav > ul > li .active {
+	color: var(--color3);
+}
+
+p.content {
+	max-width: 620px;
+	line-height: 1.5;
+}
+
+p.content ul {
+	list-style: none;
+	margin: 10px 0;
+}
+
+p.content ul li {
+	margin: 8px 0;
+	color: var(--color5);
+}
+
+p.content ul li a {
+	color: var(--color1);
+}
+
+p.content ul li code {
+	color: var(--color3);
+	background-color: #111;
+	padding: 2px 4px;
+	border-radius: 2px;
+}
+
+.footer {
+	text-align: center;
+	font-size: 12px;
+	margin-top: 10px;
+	padding-top: 0;
+}
+
+.resources-section {
+	background-color: #111;
+	padding: 15px;
+	margin: 20px 0;
+	border: 1px solid #87ff8755;
+	box-shadow: 0 0 200px #87ff8734;
+}
+
+.resources-section ul {
+	list-style: none;
+}
+
+.resources-section ul li {
+	margin: 8px 0;
+	color: var(--color5);
+}
+
+.resources-section ul li a {
+	color: var(--color1);
+}
+
+.resources-section ul li code {
+	color: var(--color3);
+	background-color: #000;
+	padding: 2px 4px;
+	border-radius: 2px;
+}
+		</style>
+	</head>
+	<body>
+		<div id="container">
+			<div id="top-nav">
+				<ul>
+					<li><a href="/resume.html">home</a></li>
+					<li><a href="/myprojects">projects</a></li>
+					<li><a href="/resources" class="active">resources</a></li>
+					<li class="right"><a href="/">cli</a></li>
+				</ul>
+			</div>
+
+			<h1 class="title">&gt; resources</h1>
+			<p class="content">
+				A collection of resources and guides that I've created that you may find useful.
+				<br><br>
+				<span class="highlight">$ curl</span> mfa.sh/resources
+				<br>
+			</p>
+			<br>
+
+			<div id="resources-content">
+				<div id="courses-section" class="resources-section" style="display: none;">
+					<h2 class="title">Courses</h2>
+					<br>
+					<ul id="courses-list"></ul>
+				</div>
+
+				<div id="guides-section" class="resources-section" style="display: none;">
+					<h2 class="title">Guides</h2>
+					<br>
+					<ul id="guides-list"></ul>
+				</div>
+			</div>
+
+			<pre class="footer"><code>
+source: <a href="https://github.com/mohammadzfaisal/myterminalcv">github.com/mohammadzfaisal/myterminalcv</a>
+&copy; mohammad faisal - mfa.sh <script>document.write(new Date().getFullYear())</script>
+			</code></pre>
+		</div>
+		<script>
+			fetch('/data.json')
+				.then(res => res.json())
+				.then(data => {
+					if (!data.resources || data.resources.length === 0) {
+						document.getElementById('resources-content').innerHTML = '<p class="content" style="color: var(--color2);">No resources available yet.</p>';
+						return;
+					}
+
+					const courses = data.resources.filter(r => r.category === 'course');
+					const guides = data.resources.filter(r => r.category === 'guide');
+
+					// Render courses
+					if (courses.length > 0) {
+						const coursesSection = document.getElementById('courses-section');
+						const coursesList = document.getElementById('courses-list');
+						coursesSection.style.display = 'block';
+
+						courses.forEach(function(resource) {
+							let li = document.createElement('li');
+							let link = document.createElement('a');
+							link.href = resource.link;
+							link.textContent = resource.title;
+							li.appendChild(link);
+							li.appendChild(document.createTextNode(' - ' + resource.description));
+							coursesList.appendChild(li);
+						});
+					}
+
+					// Render guides
+					if (guides.length > 0) {
+						const guidesSection = document.getElementById('guides-section');
+						const guidesList = document.getElementById('guides-list');
+						guidesSection.style.display = 'block';
+
+						guides.forEach(function(resource) {
+							let li = document.createElement('li');
+							let link = document.createElement('a');
+							link.href = resource.link;
+							link.textContent = resource.title;
+							li.appendChild(link);
+							li.appendChild(document.createTextNode(' - ' + resource.description));
+							guidesList.appendChild(li);
+						});
+					}
+
+					// If no resources in either category, show message
+					if (courses.length === 0 && guides.length === 0) {
+						document.getElementById('resources-content').innerHTML = '<p class="content" style="color: var(--color2);">No resources available yet.</p>';
+					}
+				})
+				.catch(err => {
+					console.error('Error loading resources:', err);
+					document.getElementById('resources-content').innerHTML = '<p class="content" style="color: var(--color2);">Error loading resources data.</p>';
+				});
+		</script>
+	</body>
+</html>
+
