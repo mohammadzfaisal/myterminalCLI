@@ -1,0 +1,92 @@
+content:
+  - name: content-posts-aws
+    label: aws.md
+    type: file
+    path: content/posts/aws.md
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        type: string
+        required: true
+        default: ""
+      - name: description
+        type: string
+        default: ""
+      - name: date
+        type: date
+        default: ""
+      - name: author
+        type: string
+        default: ""
+      - name: tags
+        type: string
+        list: true
+        default: []
+      - name: category
+        type: string
+        default: ""
+  - name: content-posts-cloud-eng-guide
+    label: cloud-eng-guide.md
+    type: file
+    path: content/posts/cloud-eng-guide.md
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        type: string
+        required: true
+        default: ""
+      - name: description
+        type: string
+        default: ""
+      - name: date
+        type: date
+        default: ""
+      - name: author
+        type: string
+        default: ""
+      - name: tags
+        type: string
+        list: true
+        default: []
+      - name: category
+        type: string
+        default: ""
+  - name: content-posts-markdown_vscode
+    label: markdown_vscode.md
+    description: Discover three powerful Markdown features that go beyond basic
+      formatting - HTML integration, escape characters, and flexible syntax
+      options for more control over your documents.
+    type: file
+    path: content/posts/markdown_vscode.md
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        type: string
+        required: true
+        default: "Beyond the Basics: 3 Markdown Features You're Probably Not Using"
+      - name: description
+        type: string
+        default: Discover three powerful Markdown features that go beyond basic
+          formatting - HTML integration, escape characters, and flexible syntax
+          options for more control over your documents.
+      - name: date
+        type: date
+        default: 2026-01-17
+      - name: author
+        type: string
+        default: ""
+      - name: tags
+        type: string
+        list: true
+        default:
+          - markdown
+          - vscode
+          - formatting
+          - html
+          - documentation
+          - writing
+          - text-editor
+          - productivity
+      - name: category
+        type: string
+        default: Guide
