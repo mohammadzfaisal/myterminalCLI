@@ -90,3 +90,64 @@ content:
       - name: category
         type: string
         default: Guide
+  - name: content-projects-cloud-dashboard
+    label: cloud-dashboard.md
+    type: file
+    path: content/projects/cloud-dashboard.md
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        type: string
+        required: true
+        default: ""
+      - name: description
+        type: string
+        default: ""
+      - name: date
+        type: date
+        default: ""
+      - name: author
+        type: string
+        default: ""
+      - name: tags
+        type: string
+        list: true
+        default: []
+      - name: category
+        type: string
+        default: ""
+  - name: content-projects-terraform-30
+    label: terraform-30.md
+    description: A daily deep-dive into Infrastructure as Code. Follow my progress
+      through 30 structured labs and state management exercises.
+    type: file
+    path: content/projects/terraform-30.md
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        type: string
+        required: true
+        default: 30 Days of Terraform
+      - name: description
+        type: string
+        default: A daily deep-dive into Infrastructure as Code. Follow my progress
+          through 30 structured labs and state management exercises.
+      - name: date
+        type: date
+        default: 2024-01-01
+      - name: author
+        type: string
+        default: Mohammad Faisal
+      - name: tags
+        type: string
+        list: true
+        default:
+          - terraform
+          - infrastructure-as-code
+          - devops
+          - cloud
+          - automation
+          - iac
+      - name: category
+        type: string
+        default: Infrastructure
