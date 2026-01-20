@@ -1,174 +1,138 @@
 content:
-  - name: content-posts-aws
-    label: aws.md
+  - name: data
+    label: Data
+    description: Primary content store for projects, blogs, challenge days, and resources.
     type: file
-    path: content/posts/aws.md
-    format: yaml-frontmatter
+    path: data.json
+    format: json
+    view:
+      fields:
+        - projects
+        - blogs
+        - terraform_challenge
+        - resources
     fields:
-      - name: title
-        type: string
-        required: true
-        default: ""
-      - name: description
-        type: string
-        default: ""
-      - name: date
-        type: date
-        default: ""
-      - name: author
-        type: string
-        default: ""
-      - name: tags
-        type: string
+      - name: projects
+        type: object
         list: true
-        default: []
-      - name: category
-        type: string
-        default: ""
-  - name: content-posts-cloud-eng-guide
-    label: cloud-eng-guide.md
-    type: file
-    path: content/posts/cloud-eng-guide.md
-    format: yaml-frontmatter
-    fields:
-      - name: title
-        type: string
+        label: Projects
+        description: Portfolio projects shown across the site.
         required: true
-        default: ""
-      - name: description
-        type: string
-        default: ""
-      - name: date
-        type: date
-        default: ""
-      - name: author
-        type: string
-        default: ""
-      - name: tags
-        type: string
+        fields:
+          - name: id
+            type: string
+            label: ID
+            description: Unique project identifier.
+            required: true
+            pattern:
+              regex: "^[a-z0-9-]+$"
+              message: "Use lowercase letters, numbers, and dashes."
+          - name: title
+            type: string
+            label: Title
+            required: true
+          - name: description
+            type: string
+            label: Description
+            required: true
+          - name: badges
+            type: object
+            list: true
+            label: Badges
+            fields:
+              - name: name
+                type: string
+                label: Name
+                required: true
+              - name: color
+                type: string
+                label: Color
+                description: Hex color for the badge.
+                pattern:
+                  regex: "^#([A-Fa-f0-9]{6})$"
+                  message: "Use a 6-digit hex color like #7b42bc."
+      - name: blogs
+        type: object
         list: true
-        default: []
-      - name: category
-        type: string
-        default: ""
-  - name: content-posts-markdown_vscode
-    label: markdown_vscode.md
-    description: Discover three powerful Markdown features that go beyond basic
-      formatting - HTML integration, escape characters, and flexible syntax
-      options for more control over your documents.
-    type: file
-    path: content/posts/markdown_vscode.md
-    format: yaml-frontmatter
-    fields:
-      - name: title
-        type: string
+        label: Blogs
+        description: Blog post metadata referenced by markdown files.
         required: true
-        default: "Beyond the Basics: 3 Markdown Features You're Probably Not Using"
-      - name: description
-        type: string
-        default: Discover three powerful Markdown features that go beyond basic
-          formatting - HTML integration, escape characters, and flexible syntax
-          options for more control over your documents.
-      - name: date
-        type: date
-        default: 2026-01-17
-      - name: author
-        type: string
-        default: ""
-      - name: tags
-        type: string
+        fields:
+          - name: id
+            type: string
+            label: ID
+            required: true
+            pattern:
+              regex: "^[a-z0-9-]+$"
+              message: "Use lowercase letters, numbers, and dashes."
+          - name: title
+            type: string
+            label: Title
+            required: true
+          - name: date
+            type: date
+            label: Date
+            required: true
+          - name: category
+            type: string
+            label: Category
+            required: true
+          - name: description
+            type: string
+            label: Description
+            required: true
+      - name: terraform_challenge
+        type: object
         list: true
-        default:
-          - markdown
-          - vscode
-          - formatting
-          - html
-          - documentation
-          - writing
-          - text-editor
-          - productivity
-      - name: category
-        type: string
-        default: Guide
-  - name: content-projects-cloud-dashboard
-    label: cloud-dashboard.md
-    type: file
-    path: content/projects/cloud-dashboard.md
-    format: yaml-frontmatter
-    fields:
-      - name: title
-        type: string
+        label: Terraform Challenge
+        description: 30-day challenge checklist and status.
         required: true
-        default: ""
-      - name: description
-        type: string
-        default: ""
-      - name: date
-        type: date
-        default: ""
-      - name: author
-        type: string
-        default: ""
-      - name: tags
-        type: string
+        fields:
+          - name: day
+            type: string
+            label: Day
+            required: true
+            pattern:
+              regex: "^[0-9]{2}$"
+              message: "Use a two-digit day like 00, 01, 30."
+          - name: title
+            type: string
+            label: Title
+            required: true
+          - name: status
+            type: string
+            label: Status
+            required: true
+      - name: resources
+        type: object
         list: true
-        default: []
-      - name: category
-        type: string
-        default: ""
-  - name: content-projects-terraform-30
-    label: terraform-30.md
-    description: A daily deep-dive into Infrastructure as Code. Follow my progress
-      through 30 structured labs and state management exercises.
-    type: file
-    path: content/projects/terraform-30.md
-    format: yaml-frontmatter
-    fields:
-      - name: title
-        type: string
+        label: Resources
+        description: External resources, guides, and course links.
         required: true
-        default: 30 Days of Terraform
-      - name: description
-        type: string
-        default: A daily deep-dive into Infrastructure as Code. Follow my progress
-          through 30 structured labs and state management exercises.
-      - name: date
-        type: date
-        default: 2024-01-01
-      - name: author
-        type: string
-        default: Mohammad Faisal
-      - name: tags
-        type: string
-        list: true
-        default:
-          - terraform
-          - infrastructure-as-code
-          - devops
-          - cloud
-          - automation
-          - iac
-      - name: category
-        type: string
-        default: Infrastructure
-  - name: content-posts-terraform-30
-    label: content/posts/terraform-30
-    type: collection
-    path: content/posts/terraform-30
-    filename: "{year}-{month}-{day}-{primary}.md"
-    format: yaml-frontmatter
-    fields:
-      - name: title
-        type: string
-        required: true
-      - name: description
-        type: string
-      - name: date
-        type: date
-      - name: author
-        type: string
-      - name: tags
-        type: string
-        list: true
-      - name: category
-        type: string
+        fields:
+          - name: id
+            type: string
+            label: ID
+            required: true
+            pattern:
+              regex: "^[a-z0-9-]+$"
+              message: "Use lowercase letters, numbers, and dashes."
+          - name: title
+            type: string
+            label: Title
+            required: true
+          - name: description
+            type: string
+            label: Description
+            required: true
+          - name: category
+            type: string
+            label: Category
+            required: true
+          - name: link
+            type: string
+            label: Link
+            required: true
+            pattern:
+              regex: "^(https?:\\/\\/|\\/).+"
+              message: "Use a full URL or a site-relative path."
