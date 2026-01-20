@@ -151,3 +151,24 @@ content:
       - name: category
         type: string
         default: Infrastructure
+  - name: content-posts-terraform-30
+    label: content/posts/terraform-30
+    type: collection
+    path: content/posts/terraform-30
+    filename: "{year}-{month}-{day}-{primary}.md"
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        type: string
+        required: true
+      - name: description
+        type: string
+      - name: date
+        type: date
+      - name: author
+        type: string
+      - name: tags
+        type: string
+        list: true
+      - name: category
+        type: string
