@@ -1,0 +1,138 @@
+content:
+  - name: data
+    label: Data
+    description: Primary content store for projects, blogs, challenge days, and resources.
+    type: file
+    path: data.json
+    format: json
+    view:
+      fields:
+        - projects
+        - blogs
+        - terraform_challenge
+        - resources
+    fields:
+      - name: projects
+        type: object
+        list: true
+        label: Projects
+        description: Portfolio projects shown across the site.
+        required: true
+        fields:
+          - name: id
+            type: string
+            label: ID
+            description: Unique project identifier.
+            required: true
+            pattern:
+              regex: "^[a-z0-9-]+$"
+              message: "Use lowercase letters, numbers, and dashes."
+          - name: title
+            type: string
+            label: Title
+            required: true
+          - name: description
+            type: string
+            label: Description
+            required: true
+          - name: badges
+            type: object
+            list: true
+            label: Badges
+            fields:
+              - name: name
+                type: string
+                label: Name
+                required: true
+              - name: color
+                type: string
+                label: Color
+                description: Hex color for the badge.
+                pattern:
+                  regex: "^#([A-Fa-f0-9]{6})$"
+                  message: "Use a 6-digit hex color like #7b42bc."
+      - name: blogs
+        type: object
+        list: true
+        label: Blogs
+        description: Blog post metadata referenced by markdown files.
+        required: true
+        fields:
+          - name: id
+            type: string
+            label: ID
+            required: true
+            pattern:
+              regex: "^[a-z0-9-]+$"
+              message: "Use lowercase letters, numbers, and dashes."
+          - name: title
+            type: string
+            label: Title
+            required: true
+          - name: date
+            type: date
+            label: Date
+            required: true
+          - name: category
+            type: string
+            label: Category
+            required: true
+          - name: description
+            type: string
+            label: Description
+            required: true
+      - name: terraform_challenge
+        type: object
+        list: true
+        label: Terraform Challenge
+        description: 30-day challenge checklist and status.
+        required: true
+        fields:
+          - name: day
+            type: string
+            label: Day
+            required: true
+            pattern:
+              regex: "^[0-9]{2}$"
+              message: "Use a two-digit day like 00, 01, 30."
+          - name: title
+            type: string
+            label: Title
+            required: true
+          - name: status
+            type: string
+            label: Status
+            required: true
+      - name: resources
+        type: object
+        list: true
+        label: Resources
+        description: External resources, guides, and course links.
+        required: true
+        fields:
+          - name: id
+            type: string
+            label: ID
+            required: true
+            pattern:
+              regex: "^[a-z0-9-]+$"
+              message: "Use lowercase letters, numbers, and dashes."
+          - name: title
+            type: string
+            label: Title
+            required: true
+          - name: description
+            type: string
+            label: Description
+            required: true
+          - name: category
+            type: string
+            label: Category
+            required: true
+          - name: link
+            type: string
+            label: Link
+            required: true
+            pattern:
+              regex: "^(https?:\\/\\/|\\/).+"
+              message: "Use a full URL or a site-relative path."
