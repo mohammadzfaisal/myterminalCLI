@@ -1,141 +1,23 @@
+media:
+  - name: content-images
+    label: images
+    input: content/images
+    output: /content/images
+    extensions:
+      - jpg
+      - jpeg
+      - png
+      - webp
+      - gif
+      - svg
+components: {}
 content:
   - name: data
     label: data.json
-    description: Primary content store for projects, blogs, challenge days, and resources.
     type: file
     path: data.json
     format: json
-    view:
-      fields:
-        - projects
-        - blogs
-        - terraform_challenge
-        - resources
     fields:
-      - name: projects
-        type: object
-        list: true
-        label: Projects
-        description: Portfolio projects shown across the site.
-        required: true
-        fields:
-          - name: id
-            type: string
-            label: ID
-            description: Unique project identifier.
-            required: true
-            pattern:
-              regex: ^[a-z0-9-]+$
-              message: Use lowercase letters, numbers, and dashes.
-          - name: title
-            type: string
-            label: Title
-            required: true
-          - name: description
-            type: string
-            label: Description
-            required: true
-          - name: badges
-            type: object
-            list: true
-            label: Badges
-            fields:
-              - name: name
-                type: string
-                label: Name
-                required: true
-              - name: color
-                type: string
-                label: Color
-                description: Hex color for the badge.
-                pattern:
-                  regex: ^#([A-Fa-f0-9]{6})$
-                  message: "Use a 6-digit hex color like #7b42bc."
-      - name: blogs
-        type: object
-        list: true
-        label: Blogs
-        description: Blog post metadata referenced by markdown files.
-        required: true
-        fields:
-          - name: id
-            type: string
-            label: ID
-            required: true
-            pattern:
-              regex: ^[a-z0-9-]+$
-              message: Use lowercase letters, numbers, and dashes.
-          - name: title
-            type: string
-            label: Title
-            required: true
-          - name: date
-            type: date
-            label: Date
-            required: true
-          - name: category
-            type: string
-            label: Category
-            required: true
-          - name: description
-            type: string
-            label: Description
-            required: true
-      - name: terraform_challenge
-        type: object
-        list: true
-        label: Terraform Challenge
-        description: 30-day challenge checklist and status.
-        required: true
-        fields:
-          - name: day
-            type: string
-            label: Day
-            required: true
-            pattern:
-              regex: ^[0-9]{2}$
-              message: Use a two-digit day like 00, 01, 30.
-          - name: title
-            type: string
-            label: Title
-            required: true
-          - name: status
-            type: string
-            label: Status
-            required: true
-      - name: resources
-        type: object
-        list: true
-        label: Resources
-        description: External resources, guides, and course links.
-        required: true
-        fields:
-          - name: id
-            type: string
-            label: ID
-            required: true
-            pattern:
-              regex: ^[a-z0-9-]+$
-              message: Use lowercase letters, numbers, and dashes.
-          - name: title
-            type: string
-            label: Title
-            required: true
-          - name: description
-            type: string
-            label: Description
-            required: true
-          - name: category
-            type: string
-            label: Category
-            required: true
-          - name: link
-            type: string
-            label: Link
-            required: true
-            pattern:
-              regex: ^(https?:\/\/|\/).+
-              message: Use a full URL or a site-relative path.
       - name: title
         type: string
         required: true
@@ -150,16 +32,66 @@ content:
         list: true
       - name: category
         type: string
-media:
-  - name: content-images
-    label: images
-    input: content/images
-    output: /content/images
-    extensions:
-      - jpg
-      - jpeg
-      - png
-      - webp
-      - gif
-      - svg
-components: {}
+  - name: content-posts
+    label: content/posts
+    type: collection
+    path: content/posts
+    filename: "{year}-{month}-{day}-{primary}.md"
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        type: string
+        required: true
+      - name: description
+        type: string
+      - name: date
+        type: date
+      - name: author
+        type: string
+      - name: tags
+        type: string
+        list: true
+      - name: category
+        type: string
+  - name: content-posts-terraform-30
+    label: content/posts/terraform-30
+    type: collection
+    path: content/posts/terraform-30
+    filename: "{year}-{month}-{day}-{primary}.md"
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        type: string
+        required: true
+      - name: description
+        type: string
+      - name: date
+        type: date
+      - name: author
+        type: string
+      - name: tags
+        type: string
+        list: true
+      - name: category
+        type: string
+  - name: content-projects
+    label: content/projects
+    type: collection
+    path: content/projects
+    filename: "{year}-{month}-{day}-{primary}.md"
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        type: string
+        required: true
+      - name: description
+        type: string
+      - name: date
+        type: date
+      - name: author
+        type: string
+      - name: tags
+        type: string
+        list: true
+      - name: category
+        type: string
