@@ -1,6 +1,6 @@
 content:
   - name: data
-    label: Data
+    label: data.json
     description: Primary content store for projects, blogs, challenge days, and resources.
     type: file
     path: data.json
@@ -136,3 +136,30 @@ content:
             pattern:
               regex: ^(https?:\/\/|\/).+
               message: Use a full URL or a site-relative path.
+      - name: title
+        type: string
+        required: true
+      - name: description
+        type: string
+      - name: date
+        type: date
+      - name: author
+        type: string
+      - name: tags
+        type: string
+        list: true
+      - name: category
+        type: string
+media:
+  - name: content-images
+    label: images
+    input: content/images
+    output: /content/images
+    extensions:
+      - jpg
+      - jpeg
+      - png
+      - webp
+      - gif
+      - svg
+components: {}
