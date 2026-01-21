@@ -54,6 +54,14 @@ content:
           - name: description
             label: Description
             type: text
+  - name: terraform-challenge
+    label: Terraform Challenge
+    type: file
+    path: data.json
+    format: json
+    view:
+      primary: day
+    fields:
       - name: terraform_challenge
         label: Terraform Challenge
         type: object
@@ -62,9 +70,14 @@ content:
           - name: day
             label: Day
             type: string
+            required: true
+            pattern:
+              regex: "^[0-9]{2}$"
+              message: "Use a two-digit day like 00, 01, 30."
           - name: title
             label: Title
             type: string
+            required: true
           - name: status
             label: Status
             type: select
