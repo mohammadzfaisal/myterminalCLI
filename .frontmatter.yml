@@ -1,10 +1,105 @@
 media:
   input: content/images
   output: /content/images
-
+components: {}
 content:
-  - name: blog_content
-    label: Blog Content (content/posts)
+  - name: resources
+    label: Resources
+    type: file
+    path: data.json
+    format: json
+    fields:
+      - name: projects
+        label: Projects
+        type: object
+        list: true
+        fields:
+          - name: id
+            label: Id
+            type: string
+          - name: title
+            label: Title
+            type: string
+          - name: description
+            label: Description
+            type: text
+          - name: badges
+            label: Badges
+            type: object
+            list: true
+            fields:
+              - name: name
+                label: Name
+                type: string
+              - name: color
+                label: Color
+                type: string
+      - name: blogs
+        label: Blogs
+        type: object
+        list: true
+        fields:
+          - name: id
+            label: Id
+            type: string
+          - name: title
+            label: Title
+            type: string
+          - name: date
+            label: Date
+            type: date
+          - name: category
+            label: Category
+            type: string
+          - name: description
+            label: Description
+            type: text
+      - name: terraform_challenge
+        label: Terraform Challenge
+        type: object
+        list: true
+        fields:
+          - name: day
+            label: Day
+            type: string
+          - name: title
+            label: Title
+            type: string
+          - name: status
+            label: Status
+            type: select
+            options:
+              values:
+                - value: completed
+                  label: Completed
+                - value: In Progress
+                  label: In Progress
+                - value: locked
+                  label: Locked
+                - value: active
+                  label: Active
+      - name: resources
+        label: Resources
+        type: object
+        list: true
+        fields:
+          - name: id
+            label: Id
+            type: string
+          - name: title
+            label: Title
+            type: string
+          - name: description
+            label: Description
+            type: text
+          - name: category
+            label: Category
+            type: string
+          - name: link
+            label: Link
+            type: string
+  - name: content-posts
+    label: content/posts
     type: collection
     path: content/posts
     format: yaml-frontmatter
@@ -12,6 +107,32 @@ content:
       - name: title
         label: Title
         type: string
+        required: true
+      - name: date
+        label: Date
+        type: date
+      - name: category
+        label: Category
+        type: string
+      - name: description
+        label: Description
+        type: text
+      - name: draft
+        label: Draft
+        type: boolean
+      - name: body
+        label: Body
+        type: text
+  - name: content-posts-terraform-30
+    label: content/posts/terraform-30
+    type: collection
+    path: content/posts/terraform-30
+    format: yaml-frontmatter
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
       - name: date
         label: Date
         type: date
@@ -28,46 +149,10 @@ content:
         label: Body
         type: text
     exclude:
-      - terraform-30/readme.md
-      - terraform-30/template.md
-
-  - name: challenge_content
-    label: Challenge Content (content/posts/terraform-30)
-    type: collection
-    path: content/posts/terraform-30
-    format: yaml-frontmatter
-    fields:
-      - name: day
-        label: Day
-        type: string
-      - name: title
-        label: Title
-        type: string
-      - name: status
-        label: Status
-        type: select
-        options:
-          values:
-            - value: completed
-              label: Completed
-            - value: In Progress
-              label: In Progress
-            - value: locked
-              label: Locked
-            - value: active
-              label: Active
-      - name: draft
-        label: Draft
-        type: boolean
-      - name: body
-        label: Body
-        type: text
-    exclude:
       - readme.md
       - template.md
-
-  - name: project_content
-    label: Project Content (content/projects)
+  - name: content-projects
+    label: content/projects
     type: collection
     path: content/projects
     format: yaml-frontmatter
@@ -75,191 +160,22 @@ content:
       - name: title
         label: Title
         type: string
+        required: true
+      - name: date
+        label: Date
+        type: date
+      - name: category
+        label: Category
+        type: string
       - name: description
         label: Description
         type: text
       - name: draft
         label: Draft
         type: boolean
-      - name: link
-        label: Link
-        type: string
-      - name: badges
-        label: Badges
-        type: object
-        list: true
-        fields:
-          - name: name
-            label: Name
-            type: string
-          - name: color
-            label: Color
-            type: string
       - name: body
         label: Body
         type: text
-
-  - name: projects
-    label: Projects
-    type: file
-    path: data.json
-    format: json
-    view:
-      primary: title
-    fields:
-      - name: projects
-        label: Projects
-        type: object
-        list: true
-        fields:
-          - name: id
-            label: ID
-            type: string
-          - name: title
-            label: Title
-            type: string
-          - name: description
-            label: Description
-            type: text
-          - name: link
-            label: Link
-            type: string
-          - name: badges
-            label: Badges
-            type: object
-            list: true
-            fields:
-              - name: name
-                label: Name
-                type: string
-              - name: color
-                label: Color
-                type: string
-
-  - name: blogs
-    label: Blog Posts
-    type: file
-    path: data.json
-    format: json
-    view:
-      primary: title
-    fields:
-      - name: blogs
-        label: Blog Posts
-        type: object
-        list: true
-        fields:
-          - name: id
-            label: ID
-            type: string
-          - name: title
-            label: Title
-            type: string
-          - name: date
-            label: Date
-            type: date
-          - name: category
-            label: Category
-            type: string
-          - name: description
-            label: Description
-            type: text
-
-  - name: terraform_challenge
-    label: Terraform Challenge
-    type: file
-    path: data.json
-    format: json
-    view:
-      primary: title
-    fields:
-      - name: terraform_challenge
-        label: Challenge Items
-        type: object
-        list: true
-        fields:
-          - name: day
-            label: Day
-            type: string
-          - name: title
-            label: Title
-            type: string
-          - name: status
-            label: Status
-            type: select
-            options:
-              values:
-                - value: completed
-                  label: Completed
-                - value: In Progress
-                  label: In Progress
-                - value: locked
-                  label: Locked
-                - value: active
-                  label: Active
-
-  - name: aiops_challenge
-    label: AIOps Challenge
-    type: file
-    path: data.json
-    format: json
-    view:
-      primary: title
-    fields:
-      - name: aiops_challenge
-        label: Challenge Items
-        type: object
-        list: true
-        fields:
-          - name: day
-            label: Day
-            type: string
-          - name: title
-            label: Title
-            type: string
-          - name: status
-            label: Status
-            type: select
-            options:
-              values:
-                - value: completed
-                  label: Completed
-                - value: In Progress
-                  label: In Progress
-                - value: locked
-                  label: Locked
-                - value: active
-                  label: Active
-
-  - name: resources
-    label: Resources
-    type: file
-    path: data.json
-    format: json
-    view:
-      primary: title
-    fields:
-      - name: resources
-        label: Resources
-        type: object
-        list: true
-        fields:
-          - name: id
-            label: ID
-            type: string
-          - name: title
-            label: Title
-            type: string
-          - name: description
-            label: Description
-            type: text
-          - name: category
-            label: Category
-            type: string
-          - name: link
-            label: Link
-            type: string
-
 settings:
   content:
     merge: true
