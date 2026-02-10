@@ -5,6 +5,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta name="description" content="Terraform 30-Day Challenge - Mohammad Faisal">
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -177,8 +178,8 @@ a, a:visited {
 			</div>
 
 			<div>
-				<h1 class="title">&gt; challenge</h1>
-				<p class="content">Progress tracker for the Terraform 30-Day Challenge.</p>
+				<h1 class="title">&gt; challenges</h1>
+				<p class="content">Track progress across multiple DevOps learning challenges.</p>
 			</div>
 
 			<div class="terminal-section shadow">
@@ -186,15 +187,31 @@ a, a:visited {
 				<p class="content">A daily deep-dive into Infrastructure as Code. Follow the progress through 30 structured labs and state management exercises.</p>
 
 				<div class="progress">
-					<div id="progress-text">Loading progress...</div>
+					<div id="terraform-progress-text">Loading progress...</div>
 					<div class="progress-bar">
-						<span id="progress-bar"></span>
+						<span id="terraform-progress-bar"></span>
 					</div>
 				</div>
 
-				<div class="stat-list" id="progress-stats"></div>
-				<p class="content" id="current-day"></p>
+				<div class="stat-list" id="terraform-progress-stats"></div>
+				<p class="content" id="terraform-current-day"></p>
 				<p class="content"><a href="/myblogs/terraform-30.html">Open full challenge page</a></p>
+			</div>
+
+			<div class="terminal-section shadow">
+				<div class="terminal-section-title">100 Days of DevOps</div>
+				<p class="content">A comprehensive journey through the DevOps ecosystem covering Linux, Docker, Kubernetes, CI/CD, cloud platforms, monitoring, and security.</p>
+
+				<div class="progress">
+					<div id="devops-progress-text">Loading progress...</div>
+					<div class="progress-bar">
+						<span id="devops-progress-bar"></span>
+					</div>
+				</div>
+
+				<div class="stat-list" id="devops-progress-stats"></div>
+				<p class="content" id="devops-current-day"></p>
+				<p class="content"><a href="/myblogs/devops-100.html">Open full challenge page</a></p>
 			</div>
 
 			<pre class="footer"><code>
@@ -208,6 +225,30 @@ function normalizeStatus(status) {
 	return String(status || '').toLowerCase();
 }
 
+function updateChallengeProgress(challenge, prefix) {
+	const total = challenge.length;
+	const completed = challenge.filter((day) => normalizeStatus(day.status) === 'completed').length;
+	const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+	const activeDay = challenge.find((day) => {
+		const status = normalizeStatus(day.status);
+		return status === 'active' || status === 'in progress';
+	});
+
+	document.getElementById(`${prefix}-progress-text`).textContent = `${completed}/${total} days complete (${percent}%)`;
+	document.getElementById(`${prefix}-progress-bar`).style.width = `${percent}%`;
+	document.getElementById(`${prefix}-progress-stats`).innerHTML = `
+		<span>Completed: ${completed}</span>
+		<span>Total: ${total}</span>
+		<span>Remaining: ${Math.max(total - completed, 0)}</span>
+	`;
+
+	if (activeDay) {
+		document.getElementById(`${prefix}-current-day`).textContent = `Currently working on: Day ${activeDay.day} - ${activeDay.title}`;
+	} else {
+		document.getElementById(`${prefix}-current-day`).textContent = 'Status updates are coming soon.';
+	}
+}
+
 fetch('/data.json')
 	.then((response) => {
 		if (!response.ok) {
@@ -216,32 +257,18 @@ fetch('/data.json')
 		return response.json();
 	})
 	.then((data) => {
-		const challenge = data.terraform_challenge || [];
-		const total = challenge.length;
-		const completed = challenge.filter((day) => normalizeStatus(day.status) === 'completed').length;
-		const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
-		const activeDay = challenge.find((day) => {
-			const status = normalizeStatus(day.status);
-			return status === 'active' || status === 'in progress';
-		});
+		// Update Terraform challenge
+		const terraformChallenge = data.terraform_challenge || [];
+		updateChallengeProgress(terraformChallenge, 'terraform');
 
-		document.getElementById('progress-text').textContent = `${completed}/${total} days complete (${percent}%)`;
-		document.getElementById('progress-bar').style.width = `${percent}%`;
-		document.getElementById('progress-stats').innerHTML = `
-			<span>Completed: ${completed}</span>
-			<span>Total: ${total}</span>
-			<span>Remaining: ${Math.max(total - completed, 0)}</span>
-		`;
-
-		if (activeDay) {
-			document.getElementById('current-day').textContent = `Currently working on: Day ${activeDay.day} - ${activeDay.title}`;
-		} else {
-			document.getElementById('current-day').textContent = 'Status updates are coming soon.';
-		}
+		// Update DevOps challenge
+		const devopsChallenge = data.devops_challenge || [];
+		updateChallengeProgress(devopsChallenge, 'devops');
 	})
 	.catch((error) => {
 		console.error(error);
-		document.getElementById('progress-text').textContent = 'Unable to load challenge data.';
+		document.getElementById('terraform-progress-text').textContent = 'Unable to load challenge data.';
+		document.getElementById('devops-progress-text').textContent = 'Unable to load challenge data.';
 	});
 		</script>
 	</body>

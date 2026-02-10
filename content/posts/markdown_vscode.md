@@ -20,8 +20,8 @@ Markdown is not a closed system. Its single most powerful feature is that you ca
 While standard Markdown is excellent for structure, it offers no native syntax for embedding media, applying specific colors, or defining image dimensions. That's where HTML comes in. Here are a few practical examples of what this enables:
 
 * Embedding a video: You can embed a video directly into your document using the HTML iframe tag, controlling its properties right from your text.
-* Styling text with inline CSS: For advanced text styling, you can use HTML tags with inline CSS. For example, to make a specific phrase green as shown in the guide, you would write: <p style="color:green;">This is a green text.</p>
-* Controlling image size: While Markdown can place an image, HTML gives you fine-tuned control. By using an <img> tag, you can specify exact width and height attributes.
+* Styling text with inline CSS: For advanced text styling, you can use HTML tags with inline CSS. For example, to make a specific phrase green as shown in the guide, you would write: `<p style="color:green;">This is a green text.</p>`
+* Controlling image size: While Markdown can place an image, HTML gives you fine-tuned control. By using an `<img>` tag, you can specify exact width and height attributes.
 
 This design choice reveals that Markdown's creators understood its limits. By including an HTML passthrough, they prioritized utility over purity, ensuring that Markdown could be a practical tool for the real world, not just a rigid, academic syntax.
 
